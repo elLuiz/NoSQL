@@ -1,0 +1,13 @@
+syntax = "proto3";
+option java_package = "com.hashTable";
+
+message Hello{
+  string hello_message = 1;
+}
+message SayHello{
+  string hello_reply = 1;
+}
+
+service HelloService{
+  rpc helloService(Hello) returns (SayHello){};
+}
