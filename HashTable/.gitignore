@@ -4,3 +4,5 @@
 .project
 HashTable.iml
 /bin/
+/src/main/java/com/disk/Main.java
+/hashTable.dat
