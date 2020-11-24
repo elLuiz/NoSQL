@@ -1,13 +1,44 @@
 syntax = "proto3";
 option java_package = "com.hashTable";
 
-message Hello{
-  string hello_message = 1;
-}
-message SayHello{
-  string hello_reply = 1;
+message Response{
+  string message = 1;
+  Value value = 2;
+  Null null = 3;
 }
 
-service HelloService{
-  rpc helloService(Hello) returns (SayHello){};
+message Value{
+  int64 version = 1;
+  int64 timestamp = 2;
+  bytes data = 3;
+}
+
+message Null{}
+
+message Set{
+  bytes key = 1;
+  int64 timestamp = 2;
+  bytes data = 3;
+}
+
+message Get{
+  bytes Key = 1;
+}
+
+message Del{
+  bytes key = 1;
+  int64 version = 2;
+}
+
+message TestAndSet{
+  bytes key = 1;
+  Value value = 2;
+  int64 version = 3;
+}
+
+service hashTableService{
+  rpc set(Set) returns (Response){};
+  rpc get(Get) returns (Response){};
+  rpc del(Del) returns (Response){};
+  rpc testAndSet(TestAndSet) returns (Response){};
 }
