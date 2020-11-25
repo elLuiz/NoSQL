@@ -24,7 +24,7 @@ public class DiskOperations implements Disk{
             String currentLine;
             while((currentLine = bufferedReader.readLine()) != null){
                 String [] data = currentLine.split("[\\s:]+", 4);
-                BigInteger bigIntegerKey = BigIntegerHandler.fromBytesStringtoBigInteger(data[0]);
+                BigInteger bigIntegerKey = BigIntegerHandler.fromStringToBigInteger(data[0]);
                 if((bigIntegerKey.compareTo(key) == 0)){
                     String version = data[1];
                     String timestamp = data[2];
@@ -51,7 +51,7 @@ public class DiskOperations implements Disk{
 
     //Index deve ser atomico, e ser incrementado a cada escrita
     @Override
-    public synchronized boolean write(ConcurrentHashMap<BigInteger, ValueHandler> hashMap, int index) {
+    public synchronized boolean write(ConcurrentHashMap<BigInteger, ValueHandler> hashMap, int index){
         try{
             FileWriter fileWriter = new FileWriter(PATH_FILE);
             bufferedWriter = new BufferedWriter(fileWriter);

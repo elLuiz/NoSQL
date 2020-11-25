@@ -1,6 +1,7 @@
 package com.utils;
 
 import com.google.protobuf.ByteString;
+import com.hashTable.KeyValue.Set;
 
 public class ValueHandler {
     private long version;
@@ -29,5 +30,14 @@ public class ValueHandler {
 
     public void setData(ByteString data) {
         this.data = data;
+    }
+
+    public static ValueHandler setValueHandler(Set request){
+        ValueHandler valueHandler = new ValueHandler();
+        valueHandler.setData(request.getData());
+        valueHandler.setTimestamp(request.getTimestamp());
+        valueHandler.setVersion(1);
+
+        return valueHandler;
     }
 }
