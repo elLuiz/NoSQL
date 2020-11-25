@@ -83,11 +83,11 @@ public class DiskOperations implements Disk{
     }
 
     @Override
-    public ValueHandler search(BigInteger key) {
-        return null;
+    public boolean update(BigInteger key, ValueHandler valueHandler, long version) {
+        return false;
     }
 
-    private BigInteger getNextItemKey(ConcurrentHashMap<BigInteger, ValueHandler>  concurrentHashMap,int index){
+    private BigInteger getNextItemKey(ConcurrentHashMap<BigInteger, ValueHandler>  concurrentHashMap, int index){
         ArrayList<BigInteger> arrayList = new ArrayList<>(concurrentHashMap.keySet());
         return arrayList.get(index);
     }
