@@ -6,6 +6,8 @@ import com.hashTable.ResponseBuilder;
 import com.hashTable.hashTableServiceGrpc;
 import com.utils.BigIntegerHandler;
 import com.utils.ValueHandler;
+
+import java.io.IOException;
 import java.math.BigInteger;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
@@ -27,21 +29,27 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
         BigInteger key = BigIntegerHandler.fromBytesStringToBigInteger(request.getKey());
         ResponseBuilder responseBuilder = new ResponseBuilder();
         Disk diskOperation = new DiskOperations();
+        ValueHandler valueHandler;
 
-        if(storage.get(key) == null){
-            ValueHandler valueHandler = ValueHandler.setValueHandler(request);
+        if((valueHandler = storage.get(key)) == null){
+            logger.log(Level.INFO, "Entered the earea");
+            logger.log(Level.INFO, request.getData().toString());
+            valueHandler = ValueHandler.setValueHandler(request);
             storage.put(key, valueHandler);
             delayWrite();
             //OBS: Esse valor será incrementado, depende da explicação do Lásaro para a escrita em disco
             boolean operationResult = diskOperation.write(storage, 0);
             if(operationResult){
                 responseBuilder.setResponseMessage("SUCCESS");
-                responseObserver.onNext(responseBuilder.buildResponse(valueHandler));
-                responseObserver.onCompleted();
+                responseObserver.onNext(responseBuilder.buildResponse(null));
             }
+
+            responseObserver.onError(new IOException("Could not write on disk"));
         }else{
+            logger.log(Level.INFO, "Entered the error if");
             responseBuilder.setResponseMessage("ERROR");
-            responseObserver.onNext(responseBuilder.buildResponse(null));
+            responseObserver.onNext(responseBuilder.buildResponse(valueHandler));
+            responseObserver.onCompleted();
         }
     }
 
