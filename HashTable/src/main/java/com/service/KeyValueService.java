@@ -19,11 +19,11 @@ import com.hashTable.KeyValue.Response;
 import io.grpc.stub.StreamObserver;
 
 public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBase {
-    private static final long WRITE_DELAY = 50;
+    private KeyValueManager keyValueManager = KeyValueManager.getInstance();
     private ConcurrentHashMap<BigInteger, ValueHandler> storage = new ConcurrentHashMap<>();
-    private Logger logger = Logger.getLogger(KeyValueService.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(KeyValueService.class.getName());
 
-    @Override
+
     public synchronized void set(Set request, StreamObserver<Response> responseObserver){
         BigInteger key = BigIntegerHandler.fromBytesStringToBigInteger(request.getKey());
         ResponseBuilder responseBuilder = new ResponseBuilder();
@@ -33,18 +33,15 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
         if((valueHandler = storage.get(key)) == null){
             valueHandler = ValueHandler.setValueHandler(request);
             storage.put(key, valueHandler);
-            delayWrite();
-            boolean operationResult = diskOperation.write(storage);
-            if(operationResult){
-                responseBuilder.setResponseMessage("SUCCESS");
-                responseObserver.onNext(responseBuilder.buildResponse(null));
-                responseObserver.onCompleted();
-            }
+            responseBuilder.setResponseMessage("SUCCESS");
+            responseObserver.onNext(responseBuilder.buildResponse(null));
+            keyValueManager.notify(storage);
         }else{
             responseBuilder.setResponseMessage("ERROR");
             responseObserver.onNext(responseBuilder.buildResponse(valueHandler));
-            responseObserver.onCompleted();
+            LOGGER.log(Level.INFO, "Map has not changed: " + storage.hashCode());
         }
+        responseObserver.onCompleted();
     }
 
     @Override
@@ -52,6 +49,10 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
 
     @Override
     public synchronized void del(Del request, StreamObserver<Response> responseStreamObserver){}
+
+    public ConcurrentHashMap<BigInteger, ValueHandler> getStorage() {
+        return storage;
+    }
 
     @Override
     public synchronized void testAndSet(TestAndSet request, StreamObserver<Response> responseObserver){
@@ -69,7 +70,6 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
             if (valueHandlerGet.getVersion() == version) {
                 valueHandlerGet = ValueHandler.testAndSetValueHandler(request);
                 storage.put(key, valueHandlerGet);
-                delayWrite();
                 boolean operationResult = diskOperation.write(storage);
                 if (operationResult) {
                     responseBuilder.setResponseMessage("SUCCESS");
@@ -80,14 +80,4 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
             }
         }
     }
-
-    private void delayWrite(){
-        try{
-            Thread.sleep(WRITE_DELAY);
-        }catch(InterruptedException interruptedException){
-            Thread.currentThread().interrupt();
-            logger.log(Level.WARNING, interruptedException.getMessage());
-        }
-    }
-
 }
