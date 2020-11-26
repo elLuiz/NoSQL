@@ -7,6 +7,7 @@ import com.utils.ValueHandler;
 import java.io.*;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
@@ -49,16 +50,18 @@ public class DiskOperations implements Disk{
         return null;
     }
 
-    //Index deve ser atomico, e ser incrementado a cada escrita
     @Override
-    public synchronized boolean write(ConcurrentHashMap<BigInteger, ValueHandler> hashMap, int index){
+    public synchronized boolean write(ConcurrentHashMap<BigInteger, ValueHandler> hashMap){
         try{
             FileWriter fileWriter = new FileWriter(PATH_FILE);
             bufferedWriter = new BufferedWriter(fileWriter);
-            BigInteger key = getNextItemKey(hashMap, index);
-            ValueHandler valueHandler = hashMap.get(key);
-            bufferedWriter.write(key.toString() + " : " + valueHandler.getVersion() + "  " + valueHandler.getTimestamp() + " " + valueHandler.getData()) ;
-            bufferedWriter.newLine();
+            for(Map.Entry<BigInteger, ValueHandler> entry: hashMap.entrySet()){
+                bufferedWriter.write(entry.getKey() + " : "
+                        + entry.getValue().getVersion() + "  "
+                        + entry.getValue().getTimestamp() + " "
+                        + entry.getValue().getData());
+                bufferedWriter.newLine();
+            }
         }catch (IOException ioException){
             ioException.printStackTrace();
             return false;
@@ -85,10 +88,5 @@ public class DiskOperations implements Disk{
     @Override
     public boolean update(BigInteger key, ValueHandler valueHandler, long version) {
         return false;
-    }
-
-    private BigInteger getNextItemKey(ConcurrentHashMap<BigInteger, ValueHandler>  concurrentHashMap, int index){
-        ArrayList<BigInteger> arrayList = new ArrayList<>(concurrentHashMap.keySet());
-        return arrayList.get(index);
     }
 }

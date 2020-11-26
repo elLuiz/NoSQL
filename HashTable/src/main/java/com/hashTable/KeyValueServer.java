@@ -1,6 +1,6 @@
 package com.hashTable;
 
-import com.Service.KeyValueService;
+import com.service.KeyValueService;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 

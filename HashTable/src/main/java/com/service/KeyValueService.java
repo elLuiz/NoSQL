@@ -1,4 +1,4 @@
-package com.Service;
+package com.service;
 
 import com.disk.Disk;
 import com.disk.DiskOperations;
@@ -7,7 +7,6 @@ import com.hashTable.hashTableServiceGrpc;
 import com.utils.BigIntegerHandler;
 import com.utils.ValueHandler;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
@@ -32,21 +31,16 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
         ValueHandler valueHandler;
 
         if((valueHandler = storage.get(key)) == null){
-            logger.log(Level.INFO, "Entered the earea");
-            logger.log(Level.INFO, request.getData().toString());
             valueHandler = ValueHandler.setValueHandler(request);
             storage.put(key, valueHandler);
             delayWrite();
-            //OBS: Esse valor será incrementado, depende da explicação do Lásaro para a escrita em disco
-            boolean operationResult = diskOperation.write(storage, 0);
+            boolean operationResult = diskOperation.write(storage);
             if(operationResult){
                 responseBuilder.setResponseMessage("SUCCESS");
                 responseObserver.onNext(responseBuilder.buildResponse(null));
+                responseObserver.onCompleted();
             }
-
-            responseObserver.onError(new IOException("Could not write on disk"));
         }else{
-            logger.log(Level.INFO, "Entered the error if");
             responseBuilder.setResponseMessage("ERROR");
             responseObserver.onNext(responseBuilder.buildResponse(valueHandler));
             responseObserver.onCompleted();
@@ -76,15 +70,13 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
                 valueHandlerGet = ValueHandler.testAndSetValueHandler(request);
                 storage.put(key, valueHandlerGet);
                 delayWrite();
-                boolean operationResult = diskOperation.write(storage, 0);
+                boolean operationResult = diskOperation.write(storage);
                 if (operationResult) {
                     responseBuilder.setResponseMessage("SUCCESS");
                     responseObserver.onNext(responseBuilder.buildResponse(valueHandlerGet));
                 }
-
-                responseObserver.onError(new IOException("Could not write on disk"));
             } else {
-
+//                responseBuilder.setResponseMessage("ERROR_WV");
             }
         }
     }
