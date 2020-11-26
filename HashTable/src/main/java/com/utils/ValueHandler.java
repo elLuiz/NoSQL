@@ -55,4 +55,13 @@ public class ValueHandler {
 
         return valueHandler;
     }
+
+    public static ValueHandler getValueHandler(Get request) {
+        ValueHandler valueHandler = new ValueHandler();
+        valueHandler.getVersion();
+        valueHandler.getTimestamp();
+        valueHandler.getData();
+
+        return valueHandler;
+    }
 }
