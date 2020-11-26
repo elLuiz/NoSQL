@@ -2,11 +2,14 @@ package com.utils;
 
 import com.google.protobuf.ByteString;
 import com.hashTable.KeyValue.Set;
+import com.hashTable.KeyValue.TestAndSet;
+import com.hashTable.KeyValue.Value;
 
 public class ValueHandler {
     private long version;
     private long timestamp;
     private ByteString data;
+    private Value value;
 
     public long getVersion() {
         return version;
@@ -24,6 +27,10 @@ public class ValueHandler {
         this.timestamp = timestamp;
     }
 
+    public void setValue(Value value) {
+        this.value = value;
+    }
+
     public ByteString getData() {
         return data;
     }
@@ -37,6 +44,14 @@ public class ValueHandler {
         valueHandler.setData(request.getData());
         valueHandler.setTimestamp(request.getTimestamp());
         valueHandler.setVersion(1);
+
+        return valueHandler;
+    }
+
+    public static ValueHandler testAndSetValueHandler(TestAndSet request){
+        ValueHandler valueHandler = new ValueHandler();
+        valueHandler.setValue(request.getValue());
+        valueHandler.setVersion(request.getVersion());
 
         return valueHandler;
     }

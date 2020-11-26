@@ -60,7 +60,34 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
     public synchronized void del(Del request, StreamObserver<Response> responseStreamObserver){}
 
     @Override
-    public synchronized void testAndSet(TestAndSet request, StreamObserver<Response> responseObserver){}
+    public synchronized void testAndSet(TestAndSet request, StreamObserver<Response> responseObserver){
+        // Função não finalizada - Entender toda a estrutura das condições
+        BigInteger key = BigIntegerHandler.fromBytesStringToBigInteger(request.getKey());
+        Long version = request.getVersion();
+        ValueHandler valueHandlerGet;
+        ResponseBuilder responseBuilder = new ResponseBuilder();
+        Disk diskOperation = new DiskOperations();
+
+        if ((valueHandlerGet = storage.get(key)) == null){
+            responseBuilder.setResponseMessage("ERROR_NE");
+            responseObserver.onNext(responseBuilder.buildResponse(null));
+        } else {
+            if (valueHandlerGet.getVersion() == version) {
+                valueHandlerGet = ValueHandler.testAndSetValueHandler(request);
+                storage.put(key, valueHandlerGet);
+                delayWrite();
+                boolean operationResult = diskOperation.write(storage, 0);
+                if (operationResult) {
+                    responseBuilder.setResponseMessage("SUCCESS");
+                    responseObserver.onNext(responseBuilder.buildResponse(valueHandlerGet));
+                }
+
+                responseObserver.onError(new IOException("Could not write on disk"));
+            } else {
+
+            }
+        }
+    }
 
     private void delayWrite(){
         try{
