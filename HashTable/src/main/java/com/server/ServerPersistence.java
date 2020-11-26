@@ -2,7 +2,6 @@ package com.server;
 
 import com.disk.Disk;
 import com.disk.DiskOperations;
-import com.service.KeyValueService;
 import com.service.Subscriber;
 import com.utils.ValueHandler;
 import java.math.BigInteger;
@@ -14,11 +13,6 @@ public class ServerPersistence extends Thread implements Subscriber {
     private final static Logger LOGGER = Logger.getLogger(ServerPersistence.class.getName());
     private long writeTimeOut = 2000;
     private ConcurrentHashMap<BigInteger, ValueHandler> currentHashMap;
-    private KeyValueService keyValueService;
-
-    public ServerPersistence(){
-        keyValueService = new KeyValueService();
-    }
 
     public void writeOnDisk(){
         while (true){
