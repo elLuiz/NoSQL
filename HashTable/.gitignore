@@ -3,6 +3,7 @@
 .settings
 .project
 HashTable.iml
+/hashTable.iml
 /bin/
 /src/main/java/com/disk/Main.java
 /src/main/java/com/hashTable/KeyValueClient.java
