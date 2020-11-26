@@ -23,6 +23,14 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
     private ConcurrentHashMap<BigInteger, ValueHandler> storage = new ConcurrentHashMap<>();
     private final static Logger LOGGER = Logger.getLogger(KeyValueService.class.getName());
 
+    public KeyValueService(){
+        Disk diskOperation = new DiskOperations();
+        storage = diskOperation.retrieveRecords();
+        if(storage == null){
+            LOGGER.log(Level.WARNING, "Could not retrieve data");
+        }else
+            LOGGER.log(Level.INFO, "Map loaded: " + storage.hashCode());
+    }
 
     public synchronized void set(Set request, StreamObserver<Response> responseObserver){
         BigInteger key = BigIntegerHandler.fromBytesStringToBigInteger(request.getKey());

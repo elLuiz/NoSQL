@@ -13,10 +13,8 @@ public class KeyValueServer {
     public static void main(String []args){
         try{
             serverPersistence = new ServerPersistence();
-            KeyValueManager keyValueManager = KeyValueManager.getInstance();
-            keyValueManager.subscribe(serverPersistence);
-            serverPersistence.setWriteTimeOut(5000);
-            serverPersistence.start();
+            subscribeToKeyValue();
+            configServerPersistenceThread();
             startServer();
         }catch(Exception exception){
             System.out.println("Cause: " + exception.getCause());
@@ -33,5 +31,15 @@ public class KeyValueServer {
         server.start();
         System.out.println("Server started. *:" + server.getPort());
         server.awaitTermination();
+    }
+
+    public static void subscribeToKeyValue(){
+        KeyValueManager keyValueManager = KeyValueManager.getInstance();
+        keyValueManager.subscribe(serverPersistence);
+    }
+
+    public static void configServerPersistenceThread(){
+        serverPersistence.setWriteTimeOut(5000);
+        serverPersistence.start();
     }
 }

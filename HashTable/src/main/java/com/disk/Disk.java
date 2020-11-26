@@ -12,4 +12,5 @@ public interface Disk {
     boolean delete(BigInteger key);
     boolean delete(BigInteger key, long version);
     boolean update(BigInteger key, ValueHandler valueHandler, long version);
+    ConcurrentHashMap<BigInteger, ValueHandler> retrieveRecords();
 }
