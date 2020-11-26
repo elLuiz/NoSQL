@@ -27,7 +27,6 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
     public synchronized void set(Set request, StreamObserver<Response> responseObserver){
         BigInteger key = BigIntegerHandler.fromBytesStringToBigInteger(request.getKey());
         ResponseBuilder responseBuilder = new ResponseBuilder();
-        Disk diskOperation = new DiskOperations();
         ValueHandler valueHandler;
 
         if((valueHandler = storage.get(key)) == null){
@@ -39,7 +38,6 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
         }else{
             responseBuilder.setResponseMessage("ERROR");
             responseObserver.onNext(responseBuilder.buildResponse(valueHandler));
-            LOGGER.log(Level.INFO, "Map has not changed: " + storage.hashCode());
         }
         responseObserver.onCompleted();
     }

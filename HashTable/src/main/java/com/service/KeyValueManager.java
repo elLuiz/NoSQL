@@ -30,12 +30,9 @@ public class KeyValueManager {
 
     public void subscribe(Subscriber subscriber){
         subscribers.add(subscriber);
-        logger.info("Got a new sub");
-        logger.info("" + subscribers.size());
     }
 
     public void notify(ConcurrentHashMap<BigInteger, ValueHandler> storage){
-        logger.info(":" + subscribers.size());
         subscribers.forEach((subscriber -> subscriber.update(storage)));
     }
 
