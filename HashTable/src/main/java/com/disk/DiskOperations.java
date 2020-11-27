@@ -7,6 +7,10 @@ import com.utils.LongHandler;
 import com.utils.ValueHandler;
 import java.io.*;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -19,36 +23,36 @@ public class DiskOperations implements Disk{
     public ConcurrentHashMap<BigInteger, ValueHandler> retrieveRecords(){
         BufferedReader bufferedReader = null;
         ConcurrentHashMap<BigInteger, ValueHandler> storage = new ConcurrentHashMap<>();
-        try{
-            FileReader fileReader = new FileReader(PATH_FILE);
-            bufferedReader = new BufferedReader(fileReader);
-            String currentLine;
-            while ((currentLine = bufferedReader.readLine()) != null){
-                String []data = currentLine.split("[\\s:]+", 4);
-                BigInteger key = BigIntegerHandler.fromStringToBigInteger(data[0]);
-                Long version = LongHandler.convertFromStringToLong(data[1]);
-                Long timestamp = LongHandler.convertFromStringToLong(data[2]);
-                ByteString dataBytes = ByteStringHandler.convertFromStringToByteString(data[3]);
+        if(checkFileCreation()){
+            try{
+                FileReader fileReader = new FileReader(PATH_FILE);
+                bufferedReader = new BufferedReader(fileReader);
+                String currentLine;
+                while ((currentLine = bufferedReader.readLine()) != null){
+                    String []data = currentLine.split("[\\s:]+", 4);
+                    BigInteger key = BigIntegerHandler.fromStringToBigInteger(data[0]);
+                    Long version = LongHandler.convertFromStringToLong(data[1]);
+                    Long timestamp = LongHandler.convertFromStringToLong(data[2]);
+                    ByteString dataBytes = ByteStringHandler.convertFromStringToByteString(data[3]);
 
-                ValueHandler valueHandler = new ValueHandler();
-                valueHandler.setVersion(version);
-                valueHandler.setTimestamp(timestamp);
-                valueHandler.setData(dataBytes);
+                    ValueHandler valueHandler = new ValueHandler();
+                    valueHandler.setVersion(version);
+                    valueHandler.setTimestamp(timestamp);
+                    valueHandler.setData(dataBytes);
 
-                storage.put(key, valueHandler);
-            }
-        }catch (IOException ioException){
-            LOGGER.log(Level.INFO, "" + ioException.getCause());
-            return null;
-        }finally {
-            try {
-                bufferedReader.close();
+                    storage.put(key, valueHandler);
+                }
             }catch (IOException ioException){
                 LOGGER.log(Level.INFO, "" + ioException.getCause());
-                return null;
+            }finally {
+                try {
+                    bufferedReader.close();
+                }catch (IOException ioException){
+                    LOGGER.log(Level.INFO, "" + ioException.getCause());
+                }
             }
-        }
 
+        }
         return storage;
     }
     @Override
@@ -125,4 +129,12 @@ public class DiskOperations implements Disk{
     public boolean update(BigInteger key, ValueHandler valueHandler, long version) {
         return false;
     }
+
+    private boolean checkFileCreation(){
+        if(Files.exists(Paths.get(PATH_FILE)))
+            return true;
+
+        return false;
+    }
 }
+
