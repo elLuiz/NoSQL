@@ -103,11 +103,10 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
                 storage.remove(key);
                 keyValueManager.notify(storage);
                 responseBuilder.setResponseMessage("SUCCESS");
-                responseStreamObserver.onNext(responseBuilder.buildResponse(valueHandler));
             }else{
                 responseBuilder.setResponseMessage("ERROR_WV");
-                responseStreamObserver.onNext(responseBuilder.buildResponse(valueHandler));
             }
+            responseStreamObserver.onNext(responseBuilder.buildResponse(valueHandler));
         }
 
         return responseStreamObserver;
@@ -120,7 +119,7 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
         Long version = request.getVersion();
         ValueHandler valueHandlerGet;
         ResponseBuilder responseBuilder = new ResponseBuilder();
-        
+
         if ((valueHandlerGet = storage.get(key)) == null){
             responseBuilder.setResponseMessage("ERROR_NE");
             responseObserver.onNext(responseBuilder.buildResponse(null));
