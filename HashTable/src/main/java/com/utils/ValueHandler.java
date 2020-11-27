@@ -65,13 +65,4 @@ public class ValueHandler {
         return valueHandler;
     }
 
-    public static ValueHandler getValueHandler(Get request) {
-        ValueHandler valueHandler = new ValueHandler();
-        long takeVersion = valueHandler.getVersion();
-        long takeTimestamp = valueHandler.getTimestamp();
-        ByteString takeData = valueHandler.getData();
-        ValueHandler valueHandlerReturn = new ValueHandler(takeVersion, takeTimestamp, takeData);
-
-        return valueHandlerReturn;
-    }
 }
