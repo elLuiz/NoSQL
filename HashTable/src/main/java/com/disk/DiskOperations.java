@@ -8,9 +8,7 @@ import com.utils.ValueHandler;
 import java.io.*;
 import java.math.BigInteger;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
@@ -67,13 +65,13 @@ public class DiskOperations implements Disk{
                 String [] data = currentLine.split("[\\s:]+", 4);
                 BigInteger bigIntegerKey = BigIntegerHandler.fromStringToBigInteger(data[0]);
                 if((bigIntegerKey.compareTo(key) == 0)){
-                    String version = data[1];
-                    String timestamp = data[2];
-                    String dataBytes = data[3];
+                    Long version = LongHandler.convertFromStringToLong(data[1]);
+                    Long timestamp = LongHandler.convertFromStringToLong(data[2]);
+                    ByteString dataBytes = ByteStringHandler.convertFromStringToByteString(data[3]);
 
-                    valueHandler.setVersion(LongHandler.convertFromStringToLong(version));
-                    valueHandler.setTimestamp(LongHandler.convertFromStringToLong(timestamp));
-                    valueHandler.setData(ByteStringHandler.convertFromStringToByteString(dataBytes));
+                    valueHandler.setVersion(version);
+                    valueHandler.setTimestamp(timestamp);
+                    valueHandler.setData(dataBytes);
 
                     return valueHandler;
                 }
