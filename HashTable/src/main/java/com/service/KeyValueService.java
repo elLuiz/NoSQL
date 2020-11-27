@@ -61,7 +61,7 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
             responseObserver.onNext(responseBuilder.buildResponse(null));
         }else{
             responseBuilder.setResponseMessage("SUCCESS");
-            responseObserver.onNext(responseBuilder.buildResponse(valueHandler.getValueHandler(request)));
+            responseObserver.onNext(responseBuilder.buildResponse(valueHandler));
         }
         responseObserver.onCompleted();
     }
