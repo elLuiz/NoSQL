@@ -51,7 +51,20 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
     }
 
     @Override
-    public synchronized void get(Get request, StreamObserver<Response> responseObserver){}
+    public synchronized void get(Get request, StreamObserver<Response> responseObserver){
+        BigInteger key = BigIntegerHandler.fromBytesStringToBigInteger(request.getKey());
+        ResponseBuilder responseBuilder = new ResponseBuilder();
+        ValueHandler valueHandler;
+
+        if((valueHandler = storage.get(key)) == null){
+            responseBuilder.setResponseMessage("ERROR");
+            responseObserver.onNext(responseBuilder.buildResponse(null));
+        }else{
+            responseBuilder.setResponseMessage("SUCCESS");
+            responseObserver.onNext(responseBuilder.buildResponse(valueHandler.getValueHandler(request)));
+        }
+        responseObserver.onCompleted();
+    }
 
     @Override
     public synchronized void del(Del request, StreamObserver<Response> responseStreamObserver){}
