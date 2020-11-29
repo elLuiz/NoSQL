@@ -33,36 +33,35 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
 
     public synchronized void set(Set request, StreamObserver<Response> responseObserver){
         BigInteger key = BigIntegerHandler.fromBytesStringToBigInteger(request.getKey());
-        ResponseBuilder responseBuilder = new ResponseBuilder();
+        String messageStatus = "";
         ValueHandler valueHandler;
 
         if((valueHandler = storage.get(key)) == null){
             valueHandler = ValueHandler.setValueHandler(request);
+            messageStatus = "SUCCESS";
             storage.put(key, valueHandler);
-            responseBuilder.setResponseMessage("SUCCESS");
-            responseObserver.onNext(responseBuilder.buildResponse(null));
             keyValueManager.notify(storage);
+            // Pois v' = Null
+            valueHandler = null;
         }else{
-            responseBuilder.setResponseMessage("ERROR");
-            responseObserver.onNext(responseBuilder.buildResponse(valueHandler));
+            messageStatus = "ERROR";
         }
-        responseObserver.onCompleted();
+
+        createResponse(responseObserver, valueHandler, messageStatus);
     }
 
     @Override
     public synchronized void get(Get request, StreamObserver<Response> responseObserver){
         BigInteger key = BigIntegerHandler.fromBytesStringToBigInteger(request.getKey());
-        ResponseBuilder responseBuilder = new ResponseBuilder();
+        String messageStatus;
         ValueHandler valueHandler;
 
         if((valueHandler = storage.get(key)) == null){
-            responseBuilder.setResponseMessage("ERROR");
-            responseObserver.onNext(responseBuilder.buildResponse(null));
+            messageStatus = "ERROR";
         }else{
-            responseBuilder.setResponseMessage("SUCCESS");
-            responseObserver.onNext(responseBuilder.buildResponse(valueHandler));
+            messageStatus = "SUCCESS";
         }
-        responseObserver.onCompleted();
+        createResponse(responseObserver, valueHandler, messageStatus);
     }
 
     @Override
@@ -70,46 +69,39 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
         BigInteger key = BigIntegerHandler.fromBytesStringToBigInteger(request.getKey());
         long version = request.getVersion();
         if(version > 0)
-            delKeyVersion(key, version, responseStreamObserver).onCompleted();
+            delKeyVersion(key, version, responseStreamObserver);
         else
-            delKey(key, responseStreamObserver).onCompleted();
+            delKey(key, responseStreamObserver);
     }
 
-    public synchronized StreamObserver<Response> delKey(BigInteger key, StreamObserver<Response> responseStreamObserver){
+    public synchronized void delKey(BigInteger key, StreamObserver<Response> responseStreamObserver){
         ValueHandler valueHandler;
-        ResponseBuilder responseBuilder = new ResponseBuilder();
+        String messageStatus;
         if((valueHandler = storage.remove(key)) == null){
-             responseBuilder.setResponseMessage("ERROR");
-             responseStreamObserver.onNext(responseBuilder.buildResponse(null));
+            messageStatus = "ERROR";
         }
         else{
+            messageStatus = "SUCCESS";
             keyValueManager.notify(storage);
-            responseBuilder.setResponseMessage("SUCCESS");
-            responseStreamObserver.onNext(responseBuilder.buildResponse(valueHandler));
         }
-
-        return responseStreamObserver;
+        createResponse(responseStreamObserver, valueHandler, messageStatus);
     }
 
-    public synchronized StreamObserver<Response> delKeyVersion(BigInteger key, long version, StreamObserver<Response> responseStreamObserver){
-        ResponseBuilder responseBuilder = new ResponseBuilder();
+    public synchronized void delKeyVersion(BigInteger key, long version, StreamObserver<Response> responseStreamObserver){
         ValueHandler valueHandler;
-
+        String messageStatus;
         if((valueHandler = storage.get(key)) == null){
-            responseBuilder.setResponseMessage("ERROR_NE");
-            responseStreamObserver.onNext(responseBuilder.buildResponse(null));
+            messageStatus = "ERROR_NE";
         }else{
             if(version == valueHandler.getVersion()){
                 storage.remove(key);
                 keyValueManager.notify(storage);
-                responseBuilder.setResponseMessage("SUCCESS");
+                messageStatus = "SUCCESS";
             }else{
-                responseBuilder.setResponseMessage("ERROR_WV");
+                messageStatus = "ERROR_WV";
             }
-            responseStreamObserver.onNext(responseBuilder.buildResponse(valueHandler));
         }
-
-        return responseStreamObserver;
+        createResponse(responseStreamObserver, valueHandler, messageStatus);
     }
 
     @Override
@@ -132,5 +124,12 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
 //                responseBuilder.setResponseMessage("ERROR_WV");
             }
         }
+    }
+
+    private void createResponse(StreamObserver<Response> responseStreamObserver, ValueHandler valueHandler, String message){
+        ResponseBuilder responseBuilder = new ResponseBuilder();
+        responseBuilder.setResponseMessage(message);
+        responseStreamObserver.onNext(responseBuilder.buildResponse(valueHandler));
+        responseStreamObserver.onCompleted();
     }
 }
