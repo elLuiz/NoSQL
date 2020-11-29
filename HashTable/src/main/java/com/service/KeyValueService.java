@@ -106,24 +106,25 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
 
     @Override
     public synchronized void testAndSet(TestAndSet request, StreamObserver<Response> responseObserver){
-        // Função não finalizada - Entender toda a estrutura das condições
         BigInteger key = BigIntegerHandler.fromBytesStringToBigInteger(request.getKey());
         Long version = request.getVersion();
         ValueHandler valueHandlerGet;
-        ResponseBuilder responseBuilder = new ResponseBuilder();
+        String messageStatus;
 
         if ((valueHandlerGet = storage.get(key)) == null){
-            responseBuilder.setResponseMessage("ERROR_NE");
-            responseObserver.onNext(responseBuilder.buildResponse(null));
+            messageStatus = "ERROR_NE";
         } else {
             if (valueHandlerGet.getVersion() == version) {
                 valueHandlerGet = ValueHandler.testAndSetValueHandler(request);
                 storage.put(key, valueHandlerGet);
+                messageStatus = "SUCCESS";
                 keyValueManager.notify(storage);
             } else {
-//                responseBuilder.setResponseMessage("ERROR_WV");
+                messageStatus = "ERROR_WV";
             }
         }
+
+        createResponse(responseObserver, valueHandlerGet, messageStatus);
     }
 
     private void createResponse(StreamObserver<Response> responseStreamObserver, ValueHandler valueHandler, String message){
