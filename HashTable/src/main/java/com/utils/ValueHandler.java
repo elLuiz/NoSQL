@@ -1,7 +1,6 @@
 package com.utils;
 
 import com.google.protobuf.ByteString;
-import com.hashTable.KeyValue.Get;
 import com.hashTable.KeyValue.Set;
 import com.hashTable.KeyValue.TestAndSet;
 import com.hashTable.KeyValue.Value;
@@ -11,14 +10,6 @@ public class ValueHandler {
     private long timestamp;
     private ByteString data;
     private Value value;
-
-    public ValueHandler(){}
-
-    public ValueHandler (long version, long timestamp, ByteString data){
-        this.version = version;
-        this.timestamp = timestamp;
-        this.data = data;
-    }
 
     public long getVersion() {
         return version;
