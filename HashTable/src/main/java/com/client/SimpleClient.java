@@ -19,14 +19,14 @@ public class SimpleClient extends ClientConnection{
     public static void main(String []args){
         connectToServer();
         SimpleClient simpleClient = new SimpleClient();
-//        System.out.println("-----------SET-------------");
-//        simpleClient.set();
-//        System.out.println("-----------GET-------------");
-//        simpleClient.get();
-//        System.out.println("-----------DEL-------------");
-//        simpleClient.del();
-//        System.out.println("-----------DEL KEY VERSION-------------");
-//        simpleClient.delKeyVersion();
+        System.out.println("-----------SET-------------");
+        simpleClient.set();
+        System.out.println("-----------GET-------------");
+        simpleClient.get();
+        System.out.println("-----------DEL-------------");
+        simpleClient.del();
+        System.out.println("-----------DEL KEY VERSION-------------");
+        simpleClient.delKeyVersion();
         System.out.println("-----------TEST AND SET-------------");
         simpleClient.testAndSet();
     }
