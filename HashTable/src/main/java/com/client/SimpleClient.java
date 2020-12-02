@@ -9,9 +9,7 @@ import com.hashTable.KeyValue.TestAndSet;
 import com.hashTable.KeyValue.Response;
 import com.utils.ByteStringHandler;
 import com.utils.LongHandler;
-import io.grpc.StatusRuntimeException;
 import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
 import java.util.Scanner;
 
 public class SimpleClient extends ClientConnection{
@@ -104,21 +102,5 @@ public class SimpleClient extends ClientConnection{
         value.setTimestamp(timestamp);
         value.setData(data);
         return value.build();
-    }
-
-    @Override
-    public void displayResponse(Response response) {
-        try {
-            String dataResponse = response.getValue().getData().toStringUtf8();
-            long versionResponse = response.getValue().getVersion();
-            long timestamp = response.getValue().getTimestamp();
-
-            System.out.println(response.getMessage());
-            System.out.println("Version: " + versionResponse);
-            System.out.println("Timestamp: " + timestamp);
-            System.out.println("Data: " + dataResponse);
-        }catch(StatusRuntimeException statusRuntimeException){
-            statusRuntimeException.printStackTrace();
-        }
     }
 }

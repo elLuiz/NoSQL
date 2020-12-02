@@ -7,6 +7,8 @@ import com.hashTable.hashTableServiceGrpc.hashTableServiceBlockingStub;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import com.hashTable.KeyValue.Response;
+import io.grpc.StatusRuntimeException;
+
 import java.sql.Timestamp;
 
 public abstract class ClientConnection {
@@ -61,10 +63,24 @@ public abstract class ClientConnection {
         return request.build();
     }
 
+    public void displayResponse(Response response){
+        try {
+            String dataResponse = response.getValue().getData().toStringUtf8();
+            long versionResponse = response.getValue().getVersion();
+            long timestamp = response.getValue().getTimestamp();
+
+            System.out.println(response.getMessage());
+            System.out.println("Version: " + versionResponse);
+            System.out.println("Timestamp: " + timestamp);
+            System.out.println("Data: " + dataResponse);
+        }catch(StatusRuntimeException statusRuntimeException){
+            statusRuntimeException.printStackTrace();
+        }
+    }
+
     public abstract void set();
     public abstract void get();
     public abstract void del();
     public abstract void delKeyVersion();
     public abstract void testAndSet();
-    public abstract void displayResponse(Response response);
 }
