@@ -50,8 +50,9 @@ public class ValueHandler {
 
     public static ValueHandler testAndSetValueHandler(TestAndSet request){
         ValueHandler valueHandler = new ValueHandler();
-        valueHandler.setValue(request.getValue());
-        valueHandler.setVersion(request.getVersion());
+        valueHandler.setData(request.getValue().getData());
+        valueHandler.setTimestamp(request.getValue().getTimestamp());
+        valueHandler.setVersion(request.getVersion() + 1);
 
         return valueHandler;
     }
