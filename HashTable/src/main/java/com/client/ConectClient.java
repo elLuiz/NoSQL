@@ -27,13 +27,17 @@ public class ConectClient {
     
     public static void main(String []args){
     	Scanner myObj = new Scanner(System.in);
-        System.out.println("Enter com a key: ");
-        String key = myObj.nextLine();  // Read user input
+        System.out.println("Entre com a key: ");
+        String key = myObj.nextLine();
         
-        System.out.println("Enter com os dados: ");
-        String data = myObj.nextLine();  // Read user input
+        System.out.println("Entre com os dados: ");
+        String data = myObj.nextLine();
+        
+        System.out.println("Entre com a versão: ");
+        String version = myObj.nextLine();
+        
         connectToServer();
-        set(key,data);
+        testAndSet(key,data,version);
     }
     
     public static void connectToServer(){
