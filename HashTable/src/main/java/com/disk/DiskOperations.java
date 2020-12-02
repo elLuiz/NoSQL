@@ -113,25 +113,9 @@ public class DiskOperations implements Disk{
         return true;
     }
 
-    @Override
-    public synchronized boolean delete(BigInteger key) {
-        return true;
-    }
-
-    @Override
-    public synchronized boolean delete(BigInteger key, long version) {
-        return true;
-    }
-
-    @Override
-    public boolean update(BigInteger key, ValueHandler valueHandler, long version) {
-        return false;
-    }
-
     private boolean checkFileCreation(){
         if(Files.exists(Paths.get(PATH_FILE)))
             return true;
-
         return false;
     }
 }

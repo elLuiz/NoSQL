@@ -1,17 +1,12 @@
 package com.service;
 
-import com.hashTable.KeyValue;
 import com.utils.ValueHandler;
-
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class KeyValueManager {
     private ArrayList<Subscriber> subscribers = new ArrayList<>();
-    private Logger logger = Logger.getLogger(KeyValueManager.class.getName());
     private static volatile KeyValueManager keyValueManagerInstance;
 
     private KeyValueManager(){}
@@ -24,7 +19,6 @@ public class KeyValueManager {
                 }
             }
         }
-
         return keyValueManagerInstance;
     }
 
