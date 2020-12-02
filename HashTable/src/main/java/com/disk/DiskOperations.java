@@ -7,6 +7,7 @@ import com.utils.LongHandler;
 import com.utils.ValueHandler;
 import java.io.*;
 import java.math.BigInteger;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -31,7 +32,7 @@ public class DiskOperations implements Disk{
                     BigInteger key = BigIntegerHandler.fromStringToBigInteger(data[0]);
                     Long version = LongHandler.convertFromStringToLong(data[1]);
                     Long timestamp = LongHandler.convertFromStringToLong(data[2]);
-                    ByteString dataBytes = ByteStringHandler.convertFromStringToByteString(data[3]);
+                    byte[] dataBytes = data[3].getBytes(StandardCharsets.UTF_8);
 
                     ValueHandler valueHandler = new ValueHandler();
                     valueHandler.setVersion(version);
@@ -67,7 +68,7 @@ public class DiskOperations implements Disk{
                 if((bigIntegerKey.compareTo(key) == 0)){
                     Long version = LongHandler.convertFromStringToLong(data[1]);
                     Long timestamp = LongHandler.convertFromStringToLong(data[2]);
-                    ByteString dataBytes = ByteStringHandler.convertFromStringToByteString(data[3]);
+                    byte[] dataBytes = data[3].getBytes(StandardCharsets.UTF_8);
 
                     valueHandler.setVersion(version);
                     valueHandler.setTimestamp(timestamp);
@@ -113,25 +114,9 @@ public class DiskOperations implements Disk{
         return true;
     }
 
-    @Override
-    public synchronized boolean delete(BigInteger key) {
-        return true;
-    }
-
-    @Override
-    public synchronized boolean delete(BigInteger key, long version) {
-        return true;
-    }
-
-    @Override
-    public boolean update(BigInteger key, ValueHandler valueHandler, long version) {
-        return false;
-    }
-
     private boolean checkFileCreation(){
         if(Files.exists(Paths.get(PATH_FILE)))
             return true;
-
         return false;
     }
 }

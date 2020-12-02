@@ -8,7 +8,7 @@ import com.hashTable.KeyValue.Value;
 public class ValueHandler {
     private long version;
     private long timestamp;
-    private ByteString data;
+    private byte[] data;
     private Value value;
 
     public long getVersion() {
@@ -31,17 +31,17 @@ public class ValueHandler {
         this.value = value;
     }
 
-    public ByteString getData() {
+    public byte[] getData() {
         return data;
     }
 
-    public void setData(ByteString data) {
+    public void setData(byte[] data) {
         this.data = data;
     }
 
     public static ValueHandler setValueHandler(Set request){
         ValueHandler valueHandler = new ValueHandler();
-        valueHandler.setData(request.getData());
+        valueHandler.setData(request.getData().toByteArray());
         valueHandler.setTimestamp(request.getTimestamp());
         valueHandler.setVersion(1);
 
@@ -50,10 +50,9 @@ public class ValueHandler {
 
     public static ValueHandler testAndSetValueHandler(TestAndSet request){
         ValueHandler valueHandler = new ValueHandler();
-      //  valueHandler.setValue(request.getValue());
-        valueHandler.setVersion(request.getVersion());
+        valueHandler.setData(request.getValue().getData().toByteArray());
         valueHandler.setTimestamp(request.getValue().getTimestamp());
-        valueHandler.setData(request.getValue().getData());
+        valueHandler.setVersion(request.getVersion() + 1);
 
         return valueHandler;
     }

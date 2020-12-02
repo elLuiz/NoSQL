@@ -1,17 +1,14 @@
 package com.utils;
 
-import java.sql.Timestamp;
+import com.google.protobuf.ByteString;
 
 public class LongHandler {
     public static Long convertFromStringToLong(String longString){
         return Long.parseLong(longString);
     }
-    
-    public static long convertTimestampToLong(Timestamp longTimestamp) {
-    	return longTimestamp.getTime();
+
+    public static ByteString convertFromLongToByteString(long longValue){
+        return ByteStringHandler.convertFromStringToByteString(String.valueOf(longValue));
     }
-    
-    public static Timestamp convertLongToTimestamp(long timestampLong) {    	
-    	return new Timestamp(timestampLong);
-    }
+
 }
