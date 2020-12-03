@@ -1,34 +1,33 @@
-package com.client.test;
+package com.test.Client;
 
 import com.client.ClientConnection;
 import com.google.protobuf.ByteString;
 import com.hashTable.KeyValue;
 import com.utils.LongHandler;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 class ClientTest extends ClientConnection {
     private static final int TESTS = 1000;
 
-    public static void main(String []args){
+    @BeforeEach
+    void connect(){
         connectToServer();
-        ClientTest clientTest = new ClientTest();
-        clientTest.set();
-        System.out.println("--------DELETE---------");
-        clientTest.del();
-        System.out.println("--------DELETE KEY AND VERSION---------");
-        clientTest.delKeyVersion();
     }
 
-
     @Override
+    @Test
+    @RepeatedTest(TESTS)
     public void set() {
         ByteString key, data;
-        for (int i = 0; i < TESTS; i++){
-            key = data = LongHandler.convertFromLongToByteString(generateRandomLong(1L, 500L));
-            long timestamp = getCurrentTimestamp();
-            KeyValue.Set setRequest = createSetRequest(key, data, timestamp);
-            KeyValue.Response response = clientKeyValueStub.set(setRequest);
-
-        }
+        key = data = LongHandler.convertFromLongToByteString(generateRandomLong(1L, 500L));
+        long timestamp = getCurrentTimestamp();
+        KeyValue.Set setRequest = createSetRequest(key, data, timestamp);
+        KeyValue.Response response = clientKeyValueStub.set(setRequest);
+        assertEquals("SUCCESS", response.getMessage());
     }
 
     @Override

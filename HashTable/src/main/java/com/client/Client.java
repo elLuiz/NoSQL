@@ -1,39 +1,41 @@
 package com.client;
 
+import com.client.api.ClientAPI;
+
 import java.util.Scanner;
 
-public class UserInterface {
+public class Client {
     public static void main(String []args){
-        SimpleClient.connectToServer();
+        ClientAPI.connectToServer();
         selectService();
     }
 
     private static void selectService(){
         Scanner scanner = new Scanner(System.in);
-        String chosenService = "";
-        SimpleClient simpleClient = new SimpleClient();
-        while(chosenService.compareToIgnoreCase("6")!=0)
+        int chosenService = 0;
+        ClientAPI simpleClient = new ClientAPI();
+        while(chosenService != 6)
         {
             displayMenu();
-            chosenService = scanner.nextLine();
+            chosenService = scanner.nextInt();
             switch (chosenService)
             {
-                case "1":
+                case 1:
                     simpleClient.set();
                     break;
-                case "2":
+                case 2:
                     simpleClient.get();
                     break;
-                case "3":
+                case 3:
                     simpleClient.del();
                     break;
-                case "4":
+                case 4:
                     simpleClient.delKeyVersion();
                     break;
-                case "5":
+                case 5:
                     simpleClient.testAndSet();
                     break;
-                case "6":
+                case 6:
                     break;
                 default:
                     System.out.println("Insert a valid value.");

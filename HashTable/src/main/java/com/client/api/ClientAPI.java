@@ -1,5 +1,6 @@
-package com.client;
+package com.client.api;
 
+import com.client.ClientConnection;
 import com.client.exceptions.ClientInputException;
 import com.google.protobuf.ByteString;
 import com.hashTable.KeyValue;
@@ -14,7 +15,7 @@ import com.utils.LongHandler;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
-public class SimpleClient extends ClientConnection{
+public class ClientAPI extends ClientConnection {
 	@Override
     public void set() {
     	try{
