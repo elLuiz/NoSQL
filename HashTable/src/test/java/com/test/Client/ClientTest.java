@@ -28,7 +28,8 @@ class ClientTest extends ClientConnection {
         long timestamp = getCurrentTimestamp();
         KeyValue.Set setRequest = createSetRequest(key, data, timestamp);
         KeyValue.Response response = clientKeyValueStub.set(setRequest);
-        assertTrue(response.getMessage().equals("SUCCESS"), response.getMessage());
+        displayMessage(key, "Set", response.getMessage());
+
     }
 
     @Override
@@ -43,7 +44,7 @@ class ClientTest extends ClientConnection {
         key = LongHandler.convertFromLongToByteString(generateRandomLong(1L, 500L));
         KeyValue.Del delRequest = createDelRequest(key);
         KeyValue.Response response = clientKeyValueStub.del(delRequest);
-        assertTrue(response.getMessage().equals("SUCCESS"), response.getMessage());
+        displayMessage(key, "DEL", response.getMessage());
     }
 
     @Test
@@ -56,7 +57,7 @@ class ClientTest extends ClientConnection {
         long version = generateRandomLong(1L, 10L);
         KeyValue.Del delRequest = createDelRequest(key, version);
         KeyValue.Response response = clientKeyValueStub.del(delRequest);
-        assertTrue(response.getMessage().equals("SUCCESS"), response.getMessage());
+        displayMessage(key, "DELKV", response.getMessage());
     }
 
     @Override
@@ -68,4 +69,9 @@ class ClientTest extends ClientConnection {
         return leftLimit + (long) (Math.random() * (rightLimit - leftLimit));
     }
 
+    private void displayMessage(ByteString key, String function, String message){
+        System.out.println("Function: " + function);
+        System.out.println("Key: " + key);
+        System.out.println("Message: " + message);
+    }
 }
