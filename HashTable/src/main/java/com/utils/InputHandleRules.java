@@ -1,10 +1,10 @@
-package com.client;
+package com.utils;
 
+import com.client.exceptions.ClientInputException;
 import com.google.protobuf.ByteString;
 
 public class InputHandleRules {
-	
-	protected static void checkNumericNotNull(ByteString valueByteString, String fieldName) throws ClientInputException {
+	public static void checkNumericNotNull(ByteString valueByteString, String fieldName) throws ClientInputException {
 		String value = null;
 		
 		if(valueByteString != null) {
@@ -16,15 +16,12 @@ public class InputHandleRules {
     	}
     }
 	
-	protected static void checkNotNull(Object value, String fieldName) throws ClientInputException {
-		
+	public static void checkNotNull(Object value, String fieldName) throws ClientInputException {
     	if(value==null){
     		throw new ClientInputException(fieldName);
     	}
     }
-	
-	
-	
+
 	public static boolean isNumericInt(String str) {
 		boolean isNumeric = true;
 		   try {
@@ -34,5 +31,4 @@ public class InputHandleRules {
 		   }
 		   return isNumeric;
 	}
-	
 }

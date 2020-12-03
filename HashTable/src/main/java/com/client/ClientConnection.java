@@ -11,7 +11,6 @@ import io.grpc.StatusRuntimeException;
 import java.sql.Timestamp;
 
 public abstract class ClientConnection {
-	
 	protected static ManagedChannelBuilder channelBuilder;
     protected static ManagedChannel channel;
     protected static hashTableServiceBlockingStub clientKeyValueStub;
@@ -67,11 +66,12 @@ public abstract class ClientConnection {
             String dataResponse = response.getValue().getData().toStringUtf8();
             long versionResponse = response.getValue().getVersion();
             long timestamp = response.getValue().getTimestamp();
-
             System.out.println(response.getMessage());
-            System.out.println("Version: " + versionResponse);
-            System.out.println("Timestamp: " + timestamp);
-            System.out.println("Data: " + dataResponse);
+            if(versionResponse != 0 && timestamp != 0 && dataResponse != ""){
+                System.out.println("Version: " + versionResponse);
+                System.out.println("Timestamp: " + timestamp);
+                System.out.println("Data: " + dataResponse);
+            }
         }catch(StatusRuntimeException statusRuntimeException){
             statusRuntimeException.printStackTrace();
         }

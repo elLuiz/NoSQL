@@ -1,11 +1,11 @@
-package com.client;
+package com.client.exceptions;
 
 public class ClientInputException extends Exception{
 	
 	private String message;
 	
-	public ClientInputException(String campo){
-		this.setMessage("Invalid field: "+ campo);
+	public ClientInputException(String field){
+		this.setMessage("Invalid field: " + field);
 	}
 
 	public String getMessage() {

@@ -1,21 +1,23 @@
-package com.client;
+package com.client.test;
 
+import com.client.ClientConnection;
 import com.google.protobuf.ByteString;
 import com.hashTable.KeyValue;
 import com.utils.LongHandler;
 
-public class TestClient extends ClientConnection{
+class ClientTest extends ClientConnection {
     private static final int TESTS = 1000;
 
     public static void main(String []args){
         connectToServer();
-        TestClient testClient = new TestClient();
-        testClient.set();
+        ClientTest clientTest = new ClientTest();
+        clientTest.set();
         System.out.println("--------DELETE---------");
-        testClient.del();
+        clientTest.del();
         System.out.println("--------DELETE KEY AND VERSION---------");
-        testClient.delKeyVersion();
+        clientTest.delKeyVersion();
     }
+
 
     @Override
     public void set() {
@@ -25,7 +27,7 @@ public class TestClient extends ClientConnection{
             long timestamp = getCurrentTimestamp();
             KeyValue.Set setRequest = createSetRequest(key, data, timestamp);
             KeyValue.Response response = clientKeyValueStub.set(setRequest);
-            displayResponse(response);
+
         }
     }
 
@@ -42,6 +44,7 @@ public class TestClient extends ClientConnection{
             KeyValue.Del delRequest = createDelRequest(key);
             KeyValue.Response response = clientKeyValueStub.del(delRequest);
             displayResponse(response);
+
         }
     }
 
