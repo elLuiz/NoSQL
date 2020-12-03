@@ -32,8 +32,17 @@ class ClientTest extends ClientConnection {
 
     }
 
+    @Test
+    @RepeatedTest(TESTS)
+    @DisplayName("GET FUNCTION")
     @Override
-    public void get() {}
+    public void get() {
+    	ByteString key;
+    	key = LongHandler.convertFromLongToByteString(generateRandomLong(1L, 1000L));
+    	KeyValue.Get getRequest = createGetRequest(key);
+    	KeyValue.Response response = clientKeyValueStub.get(getRequest);
+    	displayMessage(key, "GET", response.getMessage());
+    }
 
     @Test
     @RepeatedTest(TESTS)
