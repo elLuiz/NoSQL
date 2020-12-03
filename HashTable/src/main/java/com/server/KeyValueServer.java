@@ -5,10 +5,11 @@ import com.service.KeyValueService;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import java.io.IOException;
+import java.util.logging.Logger;
 
 public class KeyValueServer {
     private static ServerPersistence serverPersistence;
-
+    private final static Logger LOGGER = Logger.getLogger(KeyValueServer.class.getName());
     public static void main(String []args){
         try{
             serverPersistence = new ServerPersistence();
@@ -38,7 +39,7 @@ public class KeyValueServer {
     }
 
     public static void configServerPersistenceThread(){
-        serverPersistence.setWriteTimeOut(5000);
+        serverPersistence.setWriteTimeOut(1000);
         serverPersistence.start();
     }
 }

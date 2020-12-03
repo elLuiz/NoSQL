@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ClientTest extends ClientConnection {
-    private static final int TESTS = 1000;
+    private static final int TESTS = 100;
 
     @BeforeEach
     void init(){
@@ -24,7 +24,7 @@ class ClientTest extends ClientConnection {
     @Override
     public void set() {
         ByteString key, data;
-        key = data = LongHandler.convertFromLongToByteString(generateRandomLong(1L, 1000L));
+        key = data = LongHandler.convertFromLongToByteString(generateRandomLong(1L, 10L));
         long timestamp = getCurrentTimestamp();
         KeyValue.Set setRequest = createSetRequest(key, data, timestamp);
         KeyValue.Response response = clientKeyValueStub.set(setRequest);
@@ -41,7 +41,7 @@ class ClientTest extends ClientConnection {
     @Override
     public void del() {
         ByteString key;
-        key = LongHandler.convertFromLongToByteString(generateRandomLong(1L, 500L));
+        key = LongHandler.convertFromLongToByteString(generateRandomLong(1L, 10L));
         KeyValue.Del delRequest = createDelRequest(key);
         KeyValue.Response response = clientKeyValueStub.del(delRequest);
         displayMessage(key, "DEL", response.getMessage());
@@ -53,7 +53,7 @@ class ClientTest extends ClientConnection {
     @Override
     public void delKeyVersion() {
         ByteString key;
-        key = LongHandler.convertFromLongToByteString(generateRandomLong(1L, 500L));
+        key = LongHandler.convertFromLongToByteString(generateRandomLong(1L, 10L));
         long version = generateRandomLong(1L, 10L);
         KeyValue.Del delRequest = createDelRequest(key, version);
         KeyValue.Response response = clientKeyValueStub.del(delRequest);

@@ -1,35 +1,38 @@
 package com.server;
 
-import com.disk.Disk;
 import com.disk.DiskOperations;
 import com.service.Subscriber;
 import com.utils.ValueHandler;
 import java.math.BigInteger;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ServerPersistence extends Thread implements Subscriber {
+public class ServerPersistence implements Subscriber {
     private final static Logger LOGGER = Logger.getLogger(ServerPersistence.class.getName());
-    private long writeTimeOut = 2000;
+    private long writeTimeOut;
     private ConcurrentHashMap<BigInteger, ValueHandler> currentHashMap;
+    private ScheduledExecutorService scheduledExecutorService;
 
-    public void writeOnDisk(){
-        while (true){
-            try{
-                Thread.sleep(writeTimeOut);
-                if(currentHashMap != null){
-                    LOGGER.log(Level.INFO,"Writing");
-                    Disk diskOperation = new DiskOperations();
-                    diskOperation.write(currentHashMap);
-                    synchronized (ServerPersistence.class){
-                        setCurrentHashMap(null);
-                    }
-                    LOGGER.log(Level.INFO,"Saved");
-                }
-            }catch(InterruptedException interruptedException){
-                LOGGER.log(Level.SEVERE, "Got interrupted: " + interruptedException.getMessage());
+    public ServerPersistence(){
+        scheduledExecutorService = Executors.newScheduledThreadPool(1);
+    }
+
+    public void start(){
+        final Runnable writeOnDisk = new Runnable() {
+            @Override
+            public void run() {
+                writeOnDisk();
             }
+        };
+        scheduledExecutorService.scheduleAtFixedRate(writeOnDisk, 0, writeTimeOut, TimeUnit.MILLISECONDS);
+    }
+
+    public synchronized void writeOnDisk(){
+        if(currentHashMap != null){
+            DiskOperations.write(currentHashMap);
+            setCurrentHashMap(null);
+            LOGGER.log(Level.INFO,"Saved");
         }
     }
 
@@ -39,11 +42,6 @@ public class ServerPersistence extends Thread implements Subscriber {
 
     public void setCurrentHashMap(ConcurrentHashMap<BigInteger, ValueHandler> currentHashMap) {
         this.currentHashMap = currentHashMap;
-    }
-
-    @Override
-    public void run() {
-        writeOnDisk();
     }
 
     public void update(ConcurrentHashMap<BigInteger, ValueHandler> storage) {
