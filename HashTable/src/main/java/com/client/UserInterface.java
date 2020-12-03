@@ -1,21 +1,16 @@
 package com.client;
 
-import com.google.protobuf.ByteString;
-import com.hashTable.KeyValue;
-import com.utils.LongHandler;
-import java.io.*;
 import java.util.Scanner;
-import com.client.SimpleClient;
 
 public class UserInterface {
     public static void main(String []args){
         Scanner scanner = new Scanner(System.in);
         String chosenService = "";
-
-        while(chosenService != "6")
+        SimpleClient.connectToServer();
+        while(chosenService.compareToIgnoreCase("6")!=0)
         {
             SimpleClient simpleClient = new SimpleClient();
-
+            
             System.out.println("Escolha o numero que representa o servico que deseja utilizar:");
             System.out.println("1- Set Service:");
             System.out.println("2- Get Service:");

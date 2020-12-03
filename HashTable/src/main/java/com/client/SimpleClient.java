@@ -31,65 +31,97 @@ public class SimpleClient extends ClientConnection{
 
     @Override
     public void set() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter your key: ");
-        ByteString key = ByteStringHandler.convertFromStringToByteString(scanner.nextLine());
-        System.out.println("Enter the data: ");
-        ByteString data = ByteString.copyFrom(scanner.nextLine().getBytes(StandardCharsets.UTF_8));
-
-        long timestamp = getCurrentTimestamp();
-        Set setRequest = createSetRequest(key, data, timestamp);
-        Response response = clientKeyValueStub.set(setRequest);
-        displayResponse(response);
+    	try{
+	        Scanner scanner = new Scanner(System.in);
+	        System.out.println("Enter your key: ");
+	        ByteString key = ByteStringHandler.convertFromStringToByteString(scanner.nextLine());
+	        InputHandleRules.checkNumericNotNull(key,"key");
+	        System.out.println("Enter the data: ");
+	        ByteString data = ByteString.copyFrom(scanner.nextLine().getBytes(StandardCharsets.UTF_8));
+	
+	        long timestamp = getCurrentTimestamp();
+	        Set setRequest = createSetRequest(key, data, timestamp);
+	        Response response = clientKeyValueStub.set(setRequest);
+	        displayResponse(response);
+    	}catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
     }
 
     @Override
     public void get() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter the key: ");
-
-        ByteString key = ByteStringHandler.convertFromStringToByteString(scanner.nextLine());
-        Get getRequest = createGetRequest(key);
-        Response response = clientKeyValueStub.get(getRequest);
-        displayResponse(response);
+    	try{
+	        Scanner scanner = new Scanner(System.in);
+	        System.out.println("Enter the key: ");
+	
+	        ByteString key = ByteStringHandler.convertFromStringToByteString(scanner.nextLine());
+	        InputHandleRules.checkNumericNotNull(key,"key");
+	        
+	        Get getRequest = createGetRequest(key);
+	        Response response = clientKeyValueStub.get(getRequest);
+	        displayResponse(response);
+    	}catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
     }
 
     @Override
     public void del() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter the key: ");
-
-        ByteString key = ByteStringHandler.convertFromStringToByteString(scanner.nextLine());
-        Del delRequest = createDelRequest(key);
-        Response response = clientKeyValueStub.del(delRequest);
-        displayResponse(response);
+    	try{
+	        Scanner scanner = new Scanner(System.in);
+	        System.out.println("Enter the key: ");
+	
+	        ByteString key = ByteStringHandler.convertFromStringToByteString(scanner.nextLine());
+	        InputHandleRules.checkNumericNotNull(key,"key");
+	        
+	        Del delRequest = createDelRequest(key);
+	        Response response = clientKeyValueStub.del(delRequest);
+	        displayResponse(response);
+    	}catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
     }
 
     @Override
     public void delKeyVersion() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter the key: ");
-        ByteString key = ByteStringHandler.convertFromStringToByteString(scanner.nextLine());
-        System.out.println("Enter the version: ");
-
-        Long version = LongHandler.convertFromStringToLong(scanner.nextLine());
-        Del delRequest = createDelRequest(key, version);
-        Response response = clientKeyValueStub.del(delRequest);
-        displayResponse(response);
+    	try{
+	        Scanner scanner = new Scanner(System.in);
+	        System.out.println("Enter the key: ");
+	        ByteString key = ByteStringHandler.convertFromStringToByteString(scanner.nextLine());
+	        InputHandleRules.checkNumericNotNull(key,"key");
+	        
+	        System.out.println("Enter the version: ");
+	
+	        Long version = LongHandler.convertFromStringToLong(scanner.nextLine());
+	        Del delRequest = createDelRequest(key, version);
+	        Response response = clientKeyValueStub.del(delRequest);
+	        
+	        displayResponse(response);
+    	}catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
     }
 
     @Override
     public void testAndSet() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter the key: ");
-        ByteString key = ByteStringHandler.convertFromStringToByteString(scanner.nextLine());
-        System.out.println("Enter the version: ");
-        Long version = LongHandler.convertFromStringToLong(scanner.nextLine());
-        KeyValue.Value value = createValue(version, scanner);
-
-        TestAndSet testAndSetRequest = createTestAndSetRequest(key, value, version);
-        Response response = clientKeyValueStub.testAndSet(testAndSetRequest);
-        displayResponse(response);
+    	try{
+	        Scanner scanner = new Scanner(System.in);
+	        System.out.println("Enter the key: ");
+	        ByteString key = ByteStringHandler.convertFromStringToByteString(scanner.nextLine());
+	        InputHandleRules.checkNumericNotNull(key,"key");
+	        
+	        System.out.println("Enter the version: ");
+	        Long version = LongHandler.convertFromStringToLong(scanner.nextLine());
+	        InputHandleRules.checkNotNull(version,"version");
+	        
+	        KeyValue.Value value = createValue(version, scanner);
+	
+	        TestAndSet testAndSetRequest = createTestAndSetRequest(key, value, version);
+	        Response response = clientKeyValueStub.testAndSet(testAndSetRequest);
+	        displayResponse(response);
+    	}catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
     }
 
     private KeyValue.Value createValue(Long version, Scanner scanner){
@@ -103,4 +135,8 @@ public class SimpleClient extends ClientConnection{
         value.setData(data);
         return value.build();
     }
+    
+    
+    
+    
 }
