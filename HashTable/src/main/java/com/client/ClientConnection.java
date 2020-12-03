@@ -16,12 +16,16 @@ public abstract class ClientConnection {
     protected static hashTableServiceBlockingStub clientKeyValueStub;
 
     public static void connectToServer(){
-        channelBuilder = ManagedChannelBuilder.forAddress("localhost",9090).usePlaintext();
-        channel = channelBuilder.build();
-        clientKeyValueStub = hashTableServiceGrpc.newBlockingStub(channel);
+        try {
+            channelBuilder = ManagedChannelBuilder.forAddress("localhost",9090).usePlaintext();
+            channel = channelBuilder.build();
+            clientKeyValueStub = hashTableServiceGrpc.newBlockingStub(channel);
+        }catch (StatusRuntimeException statusRuntimeException){
+            System.out.println(statusRuntimeException.getMessage());
+        }
     }
 
-    protected long getCurrentTimestamp(){
+    public static long getCurrentTimestamp(){
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         return timestamp.getTime();
     }
@@ -59,6 +63,12 @@ public abstract class ClientConnection {
         request.setValue(value);
         request.setVersion(version);
         return request.build();
+    }
+
+    public long getVersion(ByteString key){
+        KeyValue.Get getRequest = createGetRequest(key);
+        Response response = clientKeyValueStub.get(getRequest);
+        return response.getValue().getVersion();
     }
 
     public void displayResponse(Response response){

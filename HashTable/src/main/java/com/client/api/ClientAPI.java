@@ -12,6 +12,8 @@ import com.hashTable.KeyValue.Response;
 import com.utils.ByteStringHandler;
 import com.utils.InputHandleRules;
 import com.utils.LongHandler;
+import io.grpc.StatusRuntimeException;
+
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 
@@ -32,6 +34,9 @@ public class ClientAPI extends ClientConnection {
 	        displayResponse(response);
     	}catch (ClientInputException exception) {
 			System.out.println(exception.getMessage());
+		}catch (StatusRuntimeException statusRuntimeException){
+    		System.out.println("Could not reach the server.");
+    		System.out.println(statusRuntimeException.getStatus());
 		}
     }
 
@@ -49,14 +54,13 @@ public class ClientAPI extends ClientConnection {
 	        displayResponse(response);
     	}catch (ClientInputException exception) {
 			System.out.println(exception.getMessage());
+		}catch (StatusRuntimeException statusRuntimeException){
+			System.out.println("Could not reach the server.");
+			System.out.println(statusRuntimeException.getStatus());
 		}
     }
 
-    public long getVersion(ByteString key){
-		Get getRequest = createGetRequest(key);
-		Response response = clientKeyValueStub.get(getRequest);
-		return response.getValue().getVersion();
-	}
+
 
     @Override
     public void del() {
@@ -72,6 +76,9 @@ public class ClientAPI extends ClientConnection {
 	        displayResponse(response);
     	}catch (ClientInputException exception) {
 			System.out.println(exception.getMessage());
+		}catch (StatusRuntimeException statusRuntimeException){
+			System.out.println("Could not reach the server.");
+			System.out.println(statusRuntimeException.getStatus());
 		}
     }
 
@@ -91,6 +98,9 @@ public class ClientAPI extends ClientConnection {
 	        displayResponse(response);
     	}catch (ClientInputException exception) {
 			System.out.println(exception.getMessage());
+		}catch (StatusRuntimeException statusRuntimeException){
+			System.out.println("Could not reach the server.");
+			System.out.println(statusRuntimeException.getStatus());
 		}
     }
 
@@ -109,6 +119,9 @@ public class ClientAPI extends ClientConnection {
 	        displayResponse(response);
     	}catch (ClientInputException exception) {
 			System.out.println(exception.getMessage());
+		}catch (StatusRuntimeException statusRuntimeException){
+			System.out.println("Could not reach the server.");
+			System.out.println(statusRuntimeException.getStatus());
 		}
     }
 

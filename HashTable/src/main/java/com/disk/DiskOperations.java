@@ -3,8 +3,6 @@ package com.disk;
 import com.utils.BigIntegerHandler;
 import com.utils.LongHandler;
 import com.utils.ValueHandler;
-
-import javax.swing.text.AbstractDocument;
 import java.io.*;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
@@ -74,7 +72,6 @@ public class DiskOperations implements Disk{
             return false;
         }finally {
             closeFile();
-            LOGGER.log(Level.INFO, "Closed");
         }
         return true;
     }
