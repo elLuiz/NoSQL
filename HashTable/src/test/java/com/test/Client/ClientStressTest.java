@@ -52,7 +52,7 @@ class ClientStressTest extends com.test.Client.Test {
 
     @Test
     @RepeatedTest(TESTS)
-    @DisplayName("DELKEYVERSION TEST")
+    @DisplayName("TESTANDSET TEST")
     @Override
     public void testAndSet() {
         super.testAndSet();
