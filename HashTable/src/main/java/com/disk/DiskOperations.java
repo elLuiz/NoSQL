@@ -15,66 +15,43 @@ import java.util.logging.Logger;
 
 public class DiskOperations implements Disk{
     private final static Logger LOGGER = Logger.getLogger(DiskOperations.class.getName());
-    private static FileWriter fileWriter;
-    private static BufferedWriter bufferedWriter;
 
-    public ConcurrentHashMap<BigInteger, ValueHandler> retrieveRecords(){
-        BufferedReader bufferedReader = null;
+    public synchronized ConcurrentHashMap<BigInteger, ValueHandler> retrieveRecords(){
         ConcurrentHashMap<BigInteger, ValueHandler> storage = new ConcurrentHashMap<>();
         if(checkFileCreation()){
             try{
-                FileReader fileReader = new FileReader(PATH_FILE);
-                bufferedReader = new BufferedReader(fileReader);
-                String currentLine;
-                while ((currentLine = bufferedReader.readLine()) != null){
-                    String []data = currentLine.split("[\\s:]+", 4);
-                    BigInteger key = BigIntegerHandler.fromStringToBigInteger(data[0]);
-                    Long version = LongHandler.convertFromStringToLong(data[1]);
-                    Long timestamp = LongHandler.convertFromStringToLong(data[2]);
-                    byte[] dataBytes = data[3].getBytes(StandardCharsets.UTF_8);
-
-                    ValueHandler valueHandler = new ValueHandler();
-                    valueHandler.setVersion(version);
-                    valueHandler.setTimestamp(timestamp);
-                    valueHandler.setData(dataBytes);
-
-                    storage.put(key, valueHandler);
-                }
-                fileReader.close();
+                FileInputStream fileInputStream = new FileInputStream(PATH_FILE);
+                ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+                storage = (ConcurrentHashMap) objectInputStream.readObject();
+                objectInputStream.close();
+                fileInputStream.close();
+            }catch (ClassNotFoundException exception){
+                LOGGER.log(Level.SEVERE, exception.getMessage());
+                LOGGER.log(Level.SEVERE, exception.getLocalizedMessage());
+                LOGGER.log(Level.INFO, "" + exception.getCause());
             }catch (IOException ioException){
+                LOGGER.log(Level.SEVERE, ioException.getMessage());
+                LOGGER.log(Level.SEVERE, ioException.getLocalizedMessage());
                 LOGGER.log(Level.INFO, "" + ioException.getCause());
-            }finally {
-                try {
-                    bufferedReader.close();
-                }catch (IOException ioException){
-                    LOGGER.log(Level.INFO, "" + ioException.getCause());
-                }
+
             }
         }
         return storage;
     }
 
-    public static synchronized boolean write(ConcurrentHashMap<BigInteger, ValueHandler> hashMap){
+    public static boolean write(ConcurrentHashMap<BigInteger, ValueHandler> hashMap){
         try{
-            fileWriter = new FileWriter(PATH_FILE);
-            bufferedWriter = new BufferedWriter(fileWriter);
-            for(Map.Entry<BigInteger, ValueHandler> entry: hashMap.entrySet()){
-                bufferedWriter.write(entry.getKey() + " : "
-                        + entry.getValue().getVersion() + "  "
-                        + entry.getValue().getTimestamp() + " "
-                        + entry.getValue().getData());
-                bufferedWriter.newLine();
-            }
-            bufferedWriter.flush();
-            bufferedWriter.close();
+            FileOutputStream fileOutputStream = new FileOutputStream(PATH_FILE);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            objectOutputStream.writeObject(hashMap);
+            fileOutputStream.close();
+            objectOutputStream.close();
+            return true;
         }catch (IOException ioException){
             LOGGER.log(Level.WARNING, ioException.getMessage());
             LOGGER.log(Level.WARNING, ioException.getLocalizedMessage());
-            return false;
-        }finally {
-            closeFile();
         }
-        return true;
+        return false;
     }
 
     private boolean checkFileCreation(){
@@ -83,13 +60,14 @@ public class DiskOperations implements Disk{
         return false;
     }
 
-    private static void closeFile(){
-        try {
-            fileWriter.close();
-        }catch (IOException ioException){
-            LOGGER.log(Level.SEVERE, ioException.getMessage());
-            LOGGER.log(Level.INFO, ioException.getLocalizedMessage());
-        }
-    }
+//    private static void closeFile(){
+//        try {
+//            fileWriter.flush();
+//            fileWriter.close();
+//        }catch (IOException ioException){
+//            LOGGER.log(Level.SEVERE, ioException.getMessage());
+//            LOGGER.log(Level.INFO, ioException.getLocalizedMessage());
+//        }
+//    }
 }
 

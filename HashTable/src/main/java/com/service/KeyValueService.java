@@ -36,6 +36,7 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
         String messageStatus = "";
         ValueHandler valueHandler;
 
+        LOGGER.log(Level.INFO, "" +key);
         if((valueHandler = storage.get(key)) == null){
             valueHandler = ValueHandler.setValueHandler(request);
             messageStatus = "SUCCESS";

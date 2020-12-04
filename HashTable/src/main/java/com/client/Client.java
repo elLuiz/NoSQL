@@ -36,7 +36,7 @@ public class Client {
                     simpleClient.testAndSet();
                     break;
                 case 6:
-                    break;
+                    System.exit(1);
                 default:
                     System.out.println("Insert a valid value.");
             }

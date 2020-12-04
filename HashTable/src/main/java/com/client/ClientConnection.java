@@ -78,9 +78,11 @@ public abstract class ClientConnection {
             long timestamp = response.getValue().getTimestamp();
             System.out.println(response.getMessage());
             if(versionResponse != 0 && timestamp != 0 && dataResponse != ""){
-                System.out.println("Version: " + versionResponse);
-                System.out.println("Timestamp: " + timestamp);
-                System.out.println("Data: " + dataResponse);
+                System.out.println("------------------------------------");
+                System.out.println("VERSION: " + versionResponse);
+                System.out.println("TIMESTAMP: " + timestamp);
+                System.out.println("DATA: " + dataResponse);
+                System.out.println("------------------------------------");
             }
         }catch(StatusRuntimeException statusRuntimeException){
             statusRuntimeException.printStackTrace();

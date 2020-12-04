@@ -7,4 +7,4 @@ HashTable.iml
 /bin/
 /src/main/java/com/disk/Main.java
 /src/main/java/com/hashTable/KeyValueClient.java
-/hashTable.dat
+/hashTable.ser

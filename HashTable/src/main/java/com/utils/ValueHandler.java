@@ -4,8 +4,9 @@ import com.google.protobuf.ByteString;
 import com.hashTable.KeyValue.Set;
 import com.hashTable.KeyValue.TestAndSet;
 import com.hashTable.KeyValue.Value;
+import java.io.Serializable;
 
-public class ValueHandler {
+public class ValueHandler implements Serializable {
     private long version;
     private long timestamp;
     private byte[] data;
@@ -25,10 +26,6 @@ public class ValueHandler {
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
-    }
-
-    public void setValue(Value value) {
-        this.value = value;
     }
 
     public byte[] getData() {

@@ -50,6 +50,9 @@ class ClientStressTest extends com.test.Client.Test {
         super.delKeyVersion();
     }
 
+    @Test
+    @RepeatedTest(TESTS)
+    @DisplayName("testAndSet")
     @Override
     public void testAndSet() {
         super.testAndSet();
