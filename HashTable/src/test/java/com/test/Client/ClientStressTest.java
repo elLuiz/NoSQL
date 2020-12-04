@@ -52,7 +52,11 @@ class ClientStressTest extends com.test.Client.Test {
 
     @Test
     @RepeatedTest(TESTS)
+<<<<<<< HEAD
     @DisplayName("testAndSet")
+=======
+    @DisplayName("TESTANDSET TEST")
+>>>>>>> fc813500424880092b531ec2fe7d6a9e89c45896
     @Override
     public void testAndSet() {
         super.testAndSet();
