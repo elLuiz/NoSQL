@@ -1,14 +1,10 @@
 package com.disk;
 
-import com.utils.BigIntegerHandler;
-import com.utils.LongHandler;
 import com.utils.ValueHandler;
 import java.io.*;
 import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -62,15 +58,5 @@ public class DiskOperations implements Disk{
             return true;
         return false;
     }
-
-//    private static void closeFile(){
-//        try {
-//            fileWriter.flush();
-//            fileWriter.close();
-//        }catch (IOException ioException){
-//            LOGGER.log(Level.SEVERE, ioException.getMessage());
-//            LOGGER.log(Level.INFO, ioException.getLocalizedMessage());
-//        }
-//    }
 }
 

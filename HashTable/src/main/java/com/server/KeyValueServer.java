@@ -39,7 +39,7 @@ public class KeyValueServer {
     }
 
     public static void configServerPersistenceThread(){
-        serverPersistence.setWriteTimeOut(10000);
+        serverPersistence.setWriteTimeOut(40000);
         serverPersistence.start();
     }
 }
