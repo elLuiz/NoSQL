@@ -7,7 +7,5 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public interface Disk {
     String PATH_FILE = "hashTable.dat";
-    ValueHandler read(BigInteger key);
-    boolean write(ConcurrentHashMap<BigInteger, ValueHandler> hashMap);
     ConcurrentHashMap<BigInteger, ValueHandler> retrieveRecords();
 }
