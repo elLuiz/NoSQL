@@ -19,7 +19,7 @@ import io.grpc.stub.StreamObserver;
 
 public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBase {
     private KeyValueManager keyValueManager = KeyValueManager.getInstance();
-    private ConcurrentHashMap<BigInteger, ValueHandler> storage = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<BigInteger, ValueHandler> storage;
     private final static Logger LOGGER = Logger.getLogger(KeyValueService.class.getName());
 
     public KeyValueService(){

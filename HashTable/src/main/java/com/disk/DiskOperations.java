@@ -66,6 +66,7 @@ public class DiskOperations implements Disk{
                 bufferedWriter.newLine();
             }
             bufferedWriter.flush();
+            bufferedWriter.close();
         }catch (IOException ioException){
             LOGGER.log(Level.WARNING, ioException.getMessage());
             LOGGER.log(Level.WARNING, ioException.getLocalizedMessage());
