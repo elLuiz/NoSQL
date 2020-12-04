@@ -23,7 +23,8 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
     private final static Logger LOGGER = Logger.getLogger(KeyValueService.class.getName());
 
     public KeyValueService(){
-        Disk diskOperation = new DiskOperations();
+        LOGGER.log(Level.INFO, "RUN ONCE");
+        DiskOperations diskOperation = new DiskOperations();
         storage = diskOperation.retrieveRecords();
         if(storage == null){
             LOGGER.log(Level.WARNING, "Could not retrieve data");

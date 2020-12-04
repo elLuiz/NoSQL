@@ -11,6 +11,8 @@ import java.util.logging.Logger;
 
 public class DiskOperations implements Disk{
     private final static Logger LOGGER = Logger.getLogger(DiskOperations.class.getName());
+    private static FileOutputStream fileOutputStream;
+    private static ObjectOutputStream objectOutputStream;
 
     public synchronized ConcurrentHashMap<BigInteger, ValueHandler> retrieveRecords(){
         ConcurrentHashMap<BigInteger, ValueHandler> storage = new ConcurrentHashMap<>();
@@ -40,11 +42,7 @@ public class DiskOperations implements Disk{
 
     public static boolean write(ConcurrentHashMap<BigInteger, ValueHandler> hashMap){
         try{
-            FileOutputStream fileOutputStream = new FileOutputStream(PATH_FILE);
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
             objectOutputStream.writeObject(hashMap);
-            fileOutputStream.close();
-            objectOutputStream.close();
             return true;
         }catch (IOException ioException){
             LOGGER.log(Level.WARNING, ioException.getMessage());
@@ -53,10 +51,18 @@ public class DiskOperations implements Disk{
         return false;
     }
 
+    public static void openFile(){
+        try{
+            fileOutputStream = new FileOutputStream(PATH_FILE);
+            objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        }catch (IOException ioException){
+            LOGGER.log(Level.WARNING, ioException.getMessage());
+        }
+    }
+
     private boolean checkFileCreation(){
         if(Files.exists(Paths.get(PATH_FILE)))
             return true;
         return false;
     }
 }
-

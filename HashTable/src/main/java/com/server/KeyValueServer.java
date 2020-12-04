@@ -1,5 +1,6 @@
 package com.server;
 
+import com.disk.DiskOperations;
 import com.service.KeyValueManager;
 import com.service.KeyValueService;
 import io.grpc.Server;
@@ -15,6 +16,8 @@ public class KeyValueServer {
             serverPersistence = new ServerPersistence();
             subscribeToKeyValue();
             configServerPersistenceThread();
+            configServerPersistenceThread();
+            DiskOperations.openFile();
             startServer();
         }catch(Exception exception){
             System.out.println("Cause: " + exception.getCause());
@@ -39,7 +42,7 @@ public class KeyValueServer {
     }
 
     public static void configServerPersistenceThread(){
-        serverPersistence.setWriteTimeOut(40000);
+        serverPersistence.setWriteTimeOut(10000);
         serverPersistence.start();
     }
 }
