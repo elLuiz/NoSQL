@@ -5,6 +5,7 @@ import com.google.protobuf.ByteString;
 import com.hashTable.KeyValue;
 import com.utils.ByteStringHandler;
 import com.utils.LongHandler;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -106,7 +107,7 @@ public class ClientTest extends ClientConnection {
         displayMessage(key, "TEST AND SET", response.getMessage());
     }
 
-    private long generateRandomLong(long leftLimit, long rightLimit){
+	private long generateRandomLong(long leftLimit, long rightLimit){
         return leftLimit + (long) (Math.random() * (rightLimit - leftLimit));
     }
 
