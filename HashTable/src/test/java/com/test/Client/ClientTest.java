@@ -3,12 +3,15 @@ package com.test.Client;
 import com.client.ClientConnection;
 import com.google.protobuf.ByteString;
 import com.hashTable.KeyValue;
+import com.hashTable.ResponseBuilder;
+import com.hashTable.KeyValue.Response;
+import com.hashTable.KeyValue.Value;
 import com.utils.LongHandler;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ClientTest extends ClientConnection {
     private static final int TESTS = 1000;
@@ -69,12 +72,21 @@ class ClientTest extends ClientConnection {
         displayMessage(key, "DELKV", response.getMessage());
     }
 
+    @Test
+    @RepeatedTest(TESTS)
+    @DisplayName("TESTANDSET FUNCTION")
     @Override
     public void testAndSet() {
-
+    	// Criar um builder para função, ainda está incompleta
+    	ByteString key;
+    	key = LongHandler.convertFromLongToByteString(generateRandomLong(1L, 1000L));
+    	long version = generateRandomLong(1L, 10L);
+//    	KeyValue.Value value = ;
+//		KeyValue.TestAndSet testAndSetRequest = createTestAndSetRequest(key, value, version);
+//    	KeyValue.Response response = clientKeyValueStub.testAndSet(testAndSetRequest);
     }
 
-    private long generateRandomLong(long leftLimit, long rightLimit){
+	private long generateRandomLong(long leftLimit, long rightLimit){
         return leftLimit + (long) (Math.random() * (rightLimit - leftLimit));
     }
 
@@ -83,4 +95,12 @@ class ClientTest extends ClientConnection {
         System.out.println("Key: " + key);
         System.out.println("Message: " + message);
     }
+    
+    private Response responseBuilder () {
+    	Value.Builder valueBuilder = Value.newBuilder();
+    	Response.Builder responseBuilder = Response.newBuilder();
+    	responseBuilder.setValue(valueBuilder.build());
+    	return responseBuilder.build();
+    }
+    
 }
