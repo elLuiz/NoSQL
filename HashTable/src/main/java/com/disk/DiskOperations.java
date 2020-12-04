@@ -30,10 +30,13 @@ public class DiskOperations implements Disk{
                 LOGGER.log(Level.SEVERE, exception.getLocalizedMessage());
                 LOGGER.log(Level.INFO, "" + exception.getCause());
             }catch (IOException ioException){
-                LOGGER.log(Level.SEVERE, ioException.getMessage());
-                LOGGER.log(Level.SEVERE, ioException.getLocalizedMessage());
-                LOGGER.log(Level.INFO, "" + ioException.getCause());
-
+                if(ioException.getLocalizedMessage() == null){
+                    LOGGER.log(Level.INFO, "No data available yet.");
+                }else{
+                    LOGGER.log(Level.SEVERE, ioException.getMessage());
+                    LOGGER.log(Level.SEVERE, ioException.getLocalizedMessage());
+                    LOGGER.log(Level.INFO, "" + ioException.getCause());
+                }
             }
         }
         return storage;
