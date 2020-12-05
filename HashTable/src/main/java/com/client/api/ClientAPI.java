@@ -10,12 +10,11 @@ import com.hashTable.KeyValue.Del;
 import com.hashTable.KeyValue.TestAndSet;
 import com.hashTable.KeyValue.Response;
 import com.utils.ByteStringHandler;
-import com.utils.InputHandleRules;
+import com.utils.InputHandler;
 import com.utils.LongHandler;
 import io.grpc.StatusRuntimeException;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
-import java.util.logging.Logger;
 
 public class ClientAPI extends ClientConnection {
 	@Override
@@ -24,7 +23,7 @@ public class ClientAPI extends ClientConnection {
 	        Scanner scanner = new Scanner(System.in);
 	        System.out.println("Enter your key: ");
 	        ByteString key = ByteStringHandler.convertFromStringToByteString(scanner.nextLine());
-	        InputHandleRules.checkNumericNotNull(key,"key");
+	        InputHandler.checkNumericNotNull(key,"key");
 	        System.out.println("Enter the data: ");
 	        ByteString data = ByteString.copyFrom(scanner.nextLine().getBytes(StandardCharsets.UTF_8));
 
@@ -47,7 +46,7 @@ public class ClientAPI extends ClientConnection {
 	        System.out.println("Enter the key: ");
 	
 	        ByteString key = ByteStringHandler.convertFromStringToByteString(scanner.nextLine());
-	        InputHandleRules.checkNumericNotNull(key,"key");
+	        InputHandler.checkNumericNotNull(key,"key");
 	        
 	        Get getRequest = createGetRequest(key);
 	        Response response = clientKeyValueStub.get(getRequest);
@@ -68,7 +67,7 @@ public class ClientAPI extends ClientConnection {
 	        System.out.println("Enter the key: ");
 	
 	        ByteString key = ByteStringHandler.convertFromStringToByteString(scanner.nextLine());
-	        InputHandleRules.checkNumericNotNull(key,"key");
+	        InputHandler.checkNumericNotNull(key,"key");
 	        
 	        Del delRequest = createDelRequest(key);
 	        Response response = clientKeyValueStub.del(delRequest);
@@ -87,8 +86,9 @@ public class ClientAPI extends ClientConnection {
 	        Scanner scanner = new Scanner(System.in);
 	        System.out.println("Enter the key: ");
 	        ByteString key = ByteStringHandler.convertFromStringToByteString(scanner.nextLine());
-	        InputHandleRules.checkNumericNotNull(key,"key");
-	        long version = getVersion(key);
+	        InputHandler.checkNumericNotNull(key,"key");
+	        System.out.println("Enter the version: ");
+	        Long version = LongHandler.convertFromStringToLong(scanner.nextLine());
 	        Del delRequest = createDelRequest(key, version);
 	        Response response = clientKeyValueStub.del(delRequest);
 	        
@@ -107,11 +107,13 @@ public class ClientAPI extends ClientConnection {
 	        Scanner scanner = new Scanner(System.in);
 	        System.out.println("Enter the key: ");
 	        ByteString key = ByteStringHandler.convertFromStringToByteString(scanner.nextLine());
-	        InputHandleRules.checkNumericNotNull(key,"key");
-	        long version = getVersion(key);
+	        InputHandler.checkNumericNotNull(key,"key");
+	        System.out.println("Enter the version: ");
+	        Long version = LongHandler.convertFromStringToLong(scanner.nextLine());
+	        InputHandler.checkNotNull(version, "version");
 	        KeyValue.Value value = createValue(version, scanner);
-	
 	        TestAndSet testAndSetRequest = createTestAndSetRequest(key, value, version);
+
 	        Response response = clientKeyValueStub.testAndSet(testAndSetRequest);
 	        displayResponse(response);
     	}catch (ClientInputException exception) {

@@ -3,7 +3,7 @@ package com.utils;
 import com.client.exceptions.ClientInputException;
 import com.google.protobuf.ByteString;
 
-public class InputHandleRules {
+public class InputHandler {
 	public static void checkNumericNotNull(ByteString valueByteString, String fieldName) throws ClientInputException {
 		String value = null;
 		

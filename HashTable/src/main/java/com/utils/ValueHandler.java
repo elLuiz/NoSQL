@@ -49,7 +49,7 @@ public class ValueHandler implements Serializable {
         ValueHandler valueHandler = new ValueHandler();
         valueHandler.setData(request.getValue().getData().toByteArray());
         valueHandler.setTimestamp(request.getValue().getTimestamp());
-        valueHandler.setVersion(request.getVersion() + 1);
+        valueHandler.setVersion(request.getVersion()+1);
 
         return valueHandler;
     }

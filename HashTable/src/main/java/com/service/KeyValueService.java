@@ -108,6 +108,7 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
     public synchronized void testAndSet(TestAndSet request, StreamObserver<Response> responseObserver){
         BigInteger key = BigIntegerHandler.fromBytesStringToBigInteger(request.getKey());
         Long version = request.getVersion();
+        LOGGER.log(Level.INFO, "" + version);
         ValueHandler valueHandlerGet;
         String messageStatus;
 
@@ -123,7 +124,6 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
                 messageStatus = "ERROR_WV";
             }
         }
-
         createResponse(responseObserver, valueHandlerGet, messageStatus);
     }
 
