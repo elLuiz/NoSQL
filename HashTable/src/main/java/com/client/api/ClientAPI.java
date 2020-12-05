@@ -13,9 +13,9 @@ import com.utils.ByteStringHandler;
 import com.utils.InputHandleRules;
 import com.utils.LongHandler;
 import io.grpc.StatusRuntimeException;
-
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 public class ClientAPI extends ClientConnection {
 	@Override
@@ -36,7 +36,7 @@ public class ClientAPI extends ClientConnection {
 			System.out.println(exception.getMessage());
 		}catch (StatusRuntimeException statusRuntimeException){
     		System.out.println("Could not reach the server.");
-    		System.out.println(statusRuntimeException.getStatus());
+    		System.out.println(statusRuntimeException.getStatus().getCode());
 		}
     }
 
@@ -55,8 +55,7 @@ public class ClientAPI extends ClientConnection {
     	}catch (ClientInputException exception) {
 			System.out.println(exception.getMessage());
 		}catch (StatusRuntimeException statusRuntimeException){
-			System.out.println("Could not reach the server.");
-			System.out.println(statusRuntimeException.getStatus());
+			System.out.println(statusRuntimeException.getStatus().getCode());
 		}
     }
 
@@ -78,7 +77,7 @@ public class ClientAPI extends ClientConnection {
 			System.out.println(exception.getMessage());
 		}catch (StatusRuntimeException statusRuntimeException){
 			System.out.println("Could not reach the server.");
-			System.out.println(statusRuntimeException.getStatus());
+			System.out.println(statusRuntimeException.getStatus().getCode());
 		}
     }
 
@@ -89,9 +88,7 @@ public class ClientAPI extends ClientConnection {
 	        System.out.println("Enter the key: ");
 	        ByteString key = ByteStringHandler.convertFromStringToByteString(scanner.nextLine());
 	        InputHandleRules.checkNumericNotNull(key,"key");
-
-	        System.out.println("Enter the version: ");
-	        Long version = LongHandler.convertFromStringToLong(scanner.nextLine());
+	        long version = getVersion(key);
 	        Del delRequest = createDelRequest(key, version);
 	        Response response = clientKeyValueStub.del(delRequest);
 	        
@@ -100,7 +97,7 @@ public class ClientAPI extends ClientConnection {
 			System.out.println(exception.getMessage());
 		}catch (StatusRuntimeException statusRuntimeException){
 			System.out.println("Could not reach the server.");
-			System.out.println(statusRuntimeException.getStatus());
+			System.out.println(statusRuntimeException.getStatus().getCode());
 		}
     }
 
@@ -121,7 +118,7 @@ public class ClientAPI extends ClientConnection {
 			System.out.println(exception.getMessage());
 		}catch (StatusRuntimeException statusRuntimeException){
 			System.out.println("Could not reach the server.");
-			System.out.println(statusRuntimeException.getStatus());
+			System.out.println(statusRuntimeException.getStatus().getCode());
 		}
     }
 

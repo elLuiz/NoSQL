@@ -21,6 +21,7 @@ public abstract class ClientConnection {
             channel = channelBuilder.build();
             clientKeyValueStub = hashTableServiceGrpc.newBlockingStub(channel);
         }catch (StatusRuntimeException statusRuntimeException){
+            System.out.println("An error has occurred");
             System.out.println(statusRuntimeException.getMessage());
         }
     }
@@ -76,9 +77,9 @@ public abstract class ClientConnection {
             String dataResponse = response.getValue().getData().toStringUtf8();
             long versionResponse = response.getValue().getVersion();
             long timestamp = response.getValue().getTimestamp();
-            System.out.println(response.getMessage());
             if(versionResponse != 0 && timestamp != 0 && dataResponse != ""){
                 System.out.println("------------------------------------");
+                System.out.println("STATUS: " + response.getMessage());
                 System.out.println("VERSION: " + versionResponse);
                 System.out.println("TIMESTAMP: " + timestamp);
                 System.out.println("DATA: " + dataResponse);
