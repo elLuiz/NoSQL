@@ -46,4 +46,3 @@ Observação: "para que qualquer mudança realizada no cliente tenha o efeito de
 - Guilherme Moreira Bomfim de Freitas
 - Luiz Henrique Dias Lima
 - Silas Mota de Sousa
-- Thiago Vieira Machado
