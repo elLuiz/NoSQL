@@ -1,5 +1,6 @@
 package com.test.Client;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -13,8 +14,8 @@ public class ClientTest extends com.test.Client.Test {
         super(TESTS, LEFT_LIMIT, RIGHT_LIMIT);
     }
 
-    @BeforeEach
-    void init(){
+    @BeforeAll
+    static void init(){
         connectToServer();
     }
 

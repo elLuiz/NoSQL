@@ -1,6 +1,5 @@
 package com.service;
 
-import com.disk.Disk;
 import com.disk.DiskOperations;
 import com.hashTable.ResponseBuilder;
 import com.hashTable.hashTableServiceGrpc;
@@ -23,13 +22,13 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
     private final static Logger LOGGER = Logger.getLogger(KeyValueService.class.getName());
 
     public KeyValueService(){
-        LOGGER.log(Level.INFO, "RUN ONCE");
         DiskOperations diskOperation = new DiskOperations();
         storage = diskOperation.retrieveRecords();
         if(storage == null){
             LOGGER.log(Level.WARNING, "Could not retrieve data");
-        }else
+        }else{
             LOGGER.log(Level.INFO, "Map loaded: " + storage.hashCode());
+        }
     }
 
     public synchronized void set(Set request, StreamObserver<Response> responseObserver){
@@ -37,7 +36,6 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
         String messageStatus = "";
         ValueHandler valueHandler;
 
-        LOGGER.log(Level.INFO, "" +key);
         if((valueHandler = storage.get(key)) == null){
             valueHandler = ValueHandler.setValueHandler(request);
             messageStatus = "SUCCESS";

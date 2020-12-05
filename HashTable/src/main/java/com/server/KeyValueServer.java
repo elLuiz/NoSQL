@@ -6,6 +6,7 @@ import com.service.KeyValueService;
 import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class KeyValueServer {
@@ -16,8 +17,6 @@ public class KeyValueServer {
             serverPersistence = new ServerPersistence();
             subscribeToKeyValue();
             configServerPersistenceThread();
-            configServerPersistenceThread();
-            DiskOperations.openFile();
             startServer();
         }catch(Exception exception){
             System.out.println("Cause: " + exception.getCause());
@@ -26,14 +25,19 @@ public class KeyValueServer {
         }
     }
 
-    public static void startServer() throws IOException, InterruptedException{
+    public static void startServer() throws IOException{
+
         KeyValueService service = new KeyValueService();
         ServerBuilder serverBuilder = ServerBuilder.forPort(9090);
         serverBuilder.addService(service);
         Server server = serverBuilder.build();
         server.start();
         System.out.println("Server started. *:" + server.getPort());
-        server.awaitTermination();
+        try{
+            server.awaitTermination();
+        }catch (InterruptedException interruptedException){
+            LOGGER.log(Level.INFO, interruptedException.getMessage());
+        }
     }
 
     public static void subscribeToKeyValue(){

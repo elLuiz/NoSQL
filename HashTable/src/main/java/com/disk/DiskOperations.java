@@ -42,24 +42,29 @@ public class DiskOperations implements Disk{
 
     public static boolean write(ConcurrentHashMap<BigInteger, ValueHandler> hashMap){
         try{
+            fileOutputStream = new FileOutputStream(PATH_FILE);
+            objectOutputStream = new ObjectOutputStream(fileOutputStream);
             objectOutputStream.writeObject(hashMap);
+            objectOutputStream.flush();
             return true;
         }catch (IOException ioException){
             LOGGER.log(Level.WARNING, ioException.getMessage());
             LOGGER.log(Level.WARNING, ioException.getLocalizedMessage());
+        }finally {
+            closeFiles();
         }
+
         return false;
     }
 
-    public static void openFile(){
+    public static void closeFiles(){
         try{
-            fileOutputStream = new FileOutputStream(PATH_FILE);
-            objectOutputStream = new ObjectOutputStream(fileOutputStream);
+            fileOutputStream.close();
+            objectOutputStream.close();
         }catch (IOException ioException){
             LOGGER.log(Level.WARNING, ioException.getMessage());
         }
     }
-
     private boolean checkFileCreation(){
         if(Files.exists(Paths.get(PATH_FILE)))
             return true;
