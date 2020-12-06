@@ -25,11 +25,20 @@ Projeto feito por alunos da Universidade Federal de Uberlândia na matéria de S
     ````
 - Certifique-se que está na branch master;
 - Abra o repositório na sua IDE de preferência como um **projeto maven**;
-- Com o projeto aberto, é preciso fazer o build como **MAVEN BUILD** no arquivo **`pom.xml`**;
+- Com o projeto aberto, é preciso fazer o build como **MAVEN BUILD** no arquivo **`pom.xml`**.
+    - Para rodar no terminal, dê o comando **`mvn compile`** dentro de **`HashTable/`**; 
 - **Como executar o servidor:**
     - Entre na pasta **`src/main/java/com/server/`** e execute como uma **aplicação JAVA** o arquivo **`KeyValueServer.java`**
+    - No terminal, posicione na pasta **`HashTable/`**, dê o comando:
+        ```
+        mvn exec:java -Dexec.mainClass="com.server.KeyValueServer"
+        ```
 - **Como executar o cliente:**
     - Entre na pasta **`src/main/java/com/client/`** e execute como uma **aplicação JAVA** o arquivo **`Client.java`**
+    - No terminal, posicione na pasta **`HashTable/`**, dê o comando:
+        ```
+        mvn exec:java -Dexec.mainClass="com.client.Client"
+        ```
 
 ````JSON
 Observação: "para que qualquer mudança realizada no cliente tenha o efeito desejado, é necessário que o servidor esteja executando"
@@ -37,7 +46,15 @@ Observação: "para que qualquer mudança realizada no cliente tenha o efeito de
 
 - **Como executar os testes:**
     - **teste de estresse com 1000 dados para testar cada função:** com o servidor executando (é preciso que ele esteja rodando) execute os testes no arquivo **`src/test/java/com/test/Client/ClientStressTest.java`** utilizando o JUnit.
+     - No terminal, posicione na pasta **`HashTable/`**, dê o comando:
+        ```
+        mvn -Dtest=ClientStressTest test
+        ```
     - **teste básico com 10 dados para testar cada função:** com o servidor executando (é preciso que ele esteja rodando) execute os testes no arquivo **`src/test/java/com/test/Client/ClientTest.java`** utilizando o JUnit.
+     - No terminal, posicione na pasta **`HashTable/`**, dê o comando:
+        ```
+        mvn -Dtest=ClientTest test
+        ```
 
 ## Membros do Grupo
 
