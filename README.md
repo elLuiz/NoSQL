@@ -46,15 +46,15 @@ Observação: "para que qualquer mudança realizada no cliente tenha o efeito de
 
 - **Como executar os testes:**
     - **teste de estresse com 1000 dados para testar cada função:** com o servidor executando (é preciso que ele esteja rodando) execute os testes no arquivo **`src/test/java/com/test/Client/ClientStressTest.java`** utilizando o JUnit.
-     - No terminal, posicione na pasta **`HashTable/`**, dê o comando:
-        ```
-        mvn -Dtest=ClientStressTest test
-        ```
+        - No terminal, posicione na pasta **`HashTable/`**, dê o comando:
+            ```
+            mvn -Dtest=ClientStressTest test
+            ```
     - **teste básico com 10 dados para testar cada função:** com o servidor executando (é preciso que ele esteja rodando) execute os testes no arquivo **`src/test/java/com/test/Client/ClientTest.java`** utilizando o JUnit.
-     - No terminal, posicione na pasta **`HashTable/`**, dê o comando:
-        ```
-        mvn -Dtest=ClientTest test
-        ```
+        - No terminal, posicione na pasta **`HashTable/`**, dê o comando:
+            ```
+            mvn -Dtest=ClientTest test
+            ```
 
 ## Membros do Grupo
 
