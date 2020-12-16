@@ -1,6 +1,7 @@
 package com.service;
 
 import com.disk.DiskOperations;
+import com.hashTable.KeyValue;
 import com.hashTable.ResponseBuilder;
 import com.hashTable.hashTableServiceGrpc;
 import com.utils.BigIntegerHandler;
@@ -67,14 +68,6 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
     @Override
     public synchronized void del(Del request, StreamObserver<Response> responseStreamObserver){
         BigInteger key = BigIntegerHandler.fromBytesStringToBigInteger(request.getKey());
-        long version = request.getVersion();
-        if(version > 0)
-            delKeyVersion(key, version, responseStreamObserver);
-        else
-            delKey(key, responseStreamObserver);
-    }
-
-    public synchronized void delKey(BigInteger key, StreamObserver<Response> responseStreamObserver){
         ValueHandler valueHandler;
         String messageStatus;
         if((valueHandler = storage.remove(key)) == null){
@@ -87,7 +80,10 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
         createResponse(responseStreamObserver, valueHandler, messageStatus);
     }
 
-    public synchronized void delKeyVersion(BigInteger key, long version, StreamObserver<Response> responseStreamObserver){
+    @Override
+    public synchronized void delKV(KeyValue.DelKV request, StreamObserver<Response> responseStreamObserver){
+        BigInteger key = BigIntegerHandler.fromBytesStringToBigInteger(request.getKey());
+        long version = request.getVersion();
         ValueHandler valueHandler;
         String messageStatus;
         if((valueHandler = storage.get(key)) == null){

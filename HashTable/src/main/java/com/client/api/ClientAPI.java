@@ -89,8 +89,8 @@ public class ClientAPI extends ClientConnection {
 	        InputHandler.checkNumericNotNull(key,"key");
 	        System.out.println("Enter the version: ");
 	        Long version = LongHandler.convertFromStringToLong(scanner.nextLine());
-	        Del delRequest = createDelRequest(key, version);
-	        Response response = clientKeyValueStub.del(delRequest);
+	        KeyValue.DelKV delRequest = createDelRequest(key, version);
+	        Response response = clientKeyValueStub.delKV(delRequest);
 	        
 	        displayResponse(response);
     	}catch (ClientInputException exception) {

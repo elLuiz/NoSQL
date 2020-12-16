@@ -51,8 +51,8 @@ public abstract class ClientConnection {
         return request.build();
     }
 
-    protected KeyValue.Del createDelRequest(ByteString key, long version){
-        KeyValue.Del.Builder request = KeyValue.Del.newBuilder();
+    protected KeyValue.DelKV createDelRequest(ByteString key, long version){
+        KeyValue.DelKV.Builder request = KeyValue.DelKV.newBuilder();
         request.setKey(key);
         request.setVersion(version);
         return request.build();
