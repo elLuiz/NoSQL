@@ -35,6 +35,7 @@ public class ClientAPI extends ClientConnection {
 			System.out.println(exception.getMessage());
 		}catch (StatusRuntimeException statusRuntimeException){
     		System.out.println("Could not reach the server.");
+    		System.out.println(statusRuntimeException.getMessage());
     		System.out.println(statusRuntimeException.getStatus().getCode());
 		}
     }

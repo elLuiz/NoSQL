@@ -8,18 +8,24 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import com.hashTable.KeyValue.Response;
 import io.grpc.StatusRuntimeException;
+import jdk.internal.org.jline.utils.Log;
+
 import java.sql.Timestamp;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class ClientConnection {
 	protected static ManagedChannelBuilder channelBuilder;
     protected static ManagedChannel channel;
     protected static hashTableServiceBlockingStub clientKeyValueStub;
+    private static final Logger LOGGER = Logger.getLogger(ClientConnection.class.getName());
 
-    public static void connectToServer(){
+    public static void connectToServer(int port){
         try {
-            channelBuilder = ManagedChannelBuilder.forAddress("localhost",9090).usePlaintext();
+            channelBuilder = ManagedChannelBuilder.forAddress("127.0.0.1",port).usePlaintext();
             channel = channelBuilder.build();
             clientKeyValueStub = hashTableServiceGrpc.newBlockingStub(channel);
+            LOGGER.log(Level.INFO, "Connected to port: " + port);
         }catch (StatusRuntimeException statusRuntimeException){
             System.out.println("An error has occurred");
             System.out.println(statusRuntimeException.getMessage());

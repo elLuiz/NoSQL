@@ -13,7 +13,7 @@ class ClientStressTest extends com.test.Client.Test {
     }
     @BeforeAll
     static void init(){
-        connectToServer();
+        connectToServer(3000);
     }
 
     @Test

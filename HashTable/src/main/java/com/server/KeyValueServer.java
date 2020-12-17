@@ -9,12 +9,15 @@ import io.grpc.Server;
 import io.grpc.ServerBuilder;
 import org.apache.ratis.conf.RaftProperties;
 import org.apache.ratis.grpc.GrpcConfigKeys;
+import org.apache.ratis.grpc.GrpcFactory;
+import org.apache.ratis.grpc.server.GrpcService;
 import org.apache.ratis.protocol.RaftGroup;
 import org.apache.ratis.protocol.RaftGroupId;
 import org.apache.ratis.protocol.RaftPeer;
 import org.apache.ratis.protocol.RaftPeerId;
 import org.apache.ratis.server.RaftServer;
 import org.apache.ratis.server.RaftServerConfigKeys;
+import org.apache.ratis.server.protocol.RaftServerProtocol;
 import org.apache.ratis.thirdparty.com.google.protobuf.ByteString;
 import org.apache.ratis.util.LifeCycle;
 
@@ -33,15 +36,21 @@ public class KeyValueServer extends RatisConnection{
     private static RaftPeerId serverId;
     private static Map<String, InetSocketAddress> addressMap;
     private static RaftProperties raftProperties;
-
+//    args[0] - -grpcPort
+//    args[2] - -id
     public static void main(String []args) throws IOException, InterruptedException{
-        String id = args[0];
+        String id = args[3];
         addressMap = createAddressesMap();
         verifyServerId(id);
         List<RaftPeer> peerList = generatePeersList(addressMap);
         serverId = RaftPeerId.valueOf(id);
         setupServer(id);
+
+        KeyValueGRPCServer grpcServer = new KeyValueGRPCServer(Integer.parseInt(args[1]));
+        grpcServer.start();
+
         joinGroupOfProcesses(peerList);
+
     }
 
     private static void verifyServerId(String serverId){
@@ -66,6 +75,7 @@ public class KeyValueServer extends RatisConnection{
                 .setProperties(raftProperties)
                 .setGroup(raftGroup)
                 .build();
+        LOGGER.log(Level.INFO, "Ratis server started");
         raftServer.start();
 
         while (raftServer.getLifeCycleState() != LifeCycle.State.CLOSED){
