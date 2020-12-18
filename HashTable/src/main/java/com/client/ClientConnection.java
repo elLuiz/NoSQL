@@ -10,6 +10,7 @@ import com.hashTable.KeyValue.Response;
 import io.grpc.StatusRuntimeException;
 import jdk.internal.org.jline.utils.Log;
 
+import java.nio.charset.Charset;
 import java.sql.Timestamp;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -80,7 +81,7 @@ public abstract class ClientConnection {
 
     public void displayResponse(Response response){
         try {
-            String dataResponse = response.getValue().getData().toStringUtf8();
+            String dataResponse = response.getValue().getData().toString(Charset.defaultCharset());
             long versionResponse = response.getValue().getVersion();
             long timestamp = response.getValue().getTimestamp();
             System.out.println("----------------RESPONSE--------------------");
