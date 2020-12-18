@@ -3,6 +3,7 @@ package com.stateMachine;
 import com.utils.BigIntegerHandler;
 import com.utils.LongHandler;
 import com.utils.ValueHandler;
+import sun.nio.cs.UTF_8;
 
 import java.math.BigInteger;
 import java.nio.charset.Charset;
@@ -17,7 +18,7 @@ public class StateMachineAPI {
     protected static String set(String []data, ConcurrentHashMap<BigInteger, ValueHandler> hashMap){
         BigInteger key = BigIntegerHandler.fromStringToBigInteger(data[1]);
         long timestamp = LongHandler.convertFromStringToLong(data[2]);
-        byte[] dataBytes = data[3].getBytes(Charset.defaultCharset());
+        byte[] dataBytes = data[3].getBytes(StandardCharsets.UTF_8);
         ValueHandler valueHandler;
         String response;
         if((valueHandler = hashMap.get(key)) == null){
@@ -29,7 +30,7 @@ public class StateMachineAPI {
 
             response = "SUCCESS:" + "NULL";
         }else{
-            response = "ERROR:" + valueHandler.getVersion() + ":" + valueHandler.getTimestamp() + ":" + valueHandler.getData().toString();
+            response = "ERROR:" + valueHandler.getVersion() + ":" + valueHandler.getTimestamp() + ":" + new String(valueHandler.getData(), StandardCharsets.UTF_8);
         }
 
         return response;
