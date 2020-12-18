@@ -50,7 +50,6 @@ public class KeyValueServer extends RatisConnection{
         grpcServer.start();
 
         joinGroupOfProcesses(peerList);
-
     }
 
     private static void verifyServerId(String serverId){
