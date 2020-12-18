@@ -72,7 +72,7 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
         ByteString key = request.getKey();
         String message = "testAndSet:" + key.toString(Charset.defaultCharset()) +
                 ":" + request.getValue().getTimestamp() +
-                ":" + request.getValue().getData() +
+                ":" + request.getValue().getData().toStringUtf8() +
                 ":" + request.getVersion();
         String response = sendTransactionalRequest(message);
         createResponse(responseObserver, response.split(":"));
