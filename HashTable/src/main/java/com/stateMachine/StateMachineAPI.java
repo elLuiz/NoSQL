@@ -28,9 +28,9 @@ public class StateMachineAPI {
             valueHandler.setVersion(1);
             hashMap.put(key, valueHandler);
 
-            response = "SUCCESS:" + "NULL";
+            response = createResponse("SUCCESS", null);
         }else{
-            response = "ERROR:" + valueHandler.getVersion() + ":" + valueHandler.getTimestamp() + ":" + new String(valueHandler.getData(), StandardCharsets.UTF_8);
+            response = createResponse("ERROR", valueHandler);
         }
 
         return response;
@@ -43,9 +43,9 @@ public class StateMachineAPI {
         String response;
 
         if ((valueHandler = hashMap.get(key)) == null){
-            response = "ERROR:NULL";
+            response = createResponse("ERROR", null);
         } else {
-            response = "SUCCESS:" + valueHandler.getVersion() + ":" + valueHandler.getTimestamp() + ":" + new String(valueHandler.getData(), StandardCharsets.UTF_8);
+            response = createResponse("SUCCESS", valueHandler);
         }
         return response;
     }
@@ -57,9 +57,9 @@ public class StateMachineAPI {
         String response;
         ValueHandler valueHandler;
         if((valueHandler = hashMap.remove(key)) == null){
-            response = "ERROR:NULL";
+            response = createResponse("ERROR", null);
         }else{
-            response = "SUCCESS:" + valueHandler.getVersion() + ":" + valueHandler.getTimestamp() + ":" + new String(valueHandler.getData(), StandardCharsets.UTF_8);
+            response = createResponse("SUCCESS", valueHandler);
         }
 
         return response;
@@ -73,13 +73,13 @@ public class StateMachineAPI {
         String response;
 
         if((valueHandler = hashMap.get(key)) == null){
-            response = "ERROR_NE:NULL";
+            response = createResponse("ERROR_NE", null);
         }else{
             if(valueHandler.getVersion() != version){
-                response = "ERROR_WV:" + valueHandler.getVersion() + ":" + valueHandler.getTimestamp() + ":" + new String(valueHandler.getData(), StandardCharsets.UTF_8);
+                response = createResponse("ERROR_WV", valueHandler);
             }else{
                 hashMap.remove(key);
-                response = "SUCCESS:"+ valueHandler.getVersion() + ":" + valueHandler.getTimestamp() + ":" + new String(valueHandler.getData(), StandardCharsets.UTF_8);
+                response = createResponse("SUCCESS", valueHandler);
             }
         }
 
@@ -89,5 +89,12 @@ public class StateMachineAPI {
     // Guilherme
     protected static String testAndSet(String []data, ConcurrentHashMap<BigInteger, ValueHandler> hashMap){
         return "";
+    }
+
+    private static String createResponse(String status, ValueHandler valueHandler){
+        if(valueHandler == null)
+            return status + ":" + "NULL";
+        else
+            return status + ":" + valueHandler.getVersion() + ":" + valueHandler.getTimestamp() + ":" + new String(valueHandler.getData(), StandardCharsets.UTF_8);
     }
 }
