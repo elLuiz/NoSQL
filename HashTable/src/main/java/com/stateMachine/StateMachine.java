@@ -14,13 +14,13 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class StateMachine extends BaseStateMachine {
-    private final Map<BigInteger, ValueHandler> hashMap = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<BigInteger, ValueHandler> hashMap = new ConcurrentHashMap<>();
 
     @Override
     public CompletableFuture<Message> query(Message request){
         final String[] operationKey = request.getContent().toString(Charset.defaultCharset()).split(":");
-        LOG.debug(operationKey[0]);
-        return CompletableFuture.completedFuture(Message.valueOf(operationKey[0]));
+        String response = selectService(operationKey[0], operationKey);
+        return CompletableFuture.completedFuture(Message.valueOf(response));
     }
 
     @Override
@@ -28,26 +28,34 @@ public class StateMachine extends BaseStateMachine {
         final RaftProtos.LogEntryProto entry = transactionContext.getLogEntry();
         final String[] operation = entry.getStateMachineLogEntry().getLogData().toString(Charset.defaultCharset()).split(":");
         // operation[0] = operation(set, get, del, delKV, testAndSet)
-        selectService(operation[0]);
+        String response = selectService(operation[0], operation);
 
-        return null;
+        return CompletableFuture.completedFuture(Message.valueOf(response));
     }
 
-    private void selectService(String api){
+    private String selectService(String api, String[] data){
+        String response = "";
         switch (api){
             case "set":
-                break;
+                response = StateMachineAPI.set(data, hashMap);
+                return response;
             case "get":
-                break;
+                response = StateMachineAPI.get(data, hashMap);
+                return response;
             case "del":
-                break;
+                response = StateMachineAPI.del(data, hashMap);
+                return response;
             case "delKV":
-                break;
+                response = StateMachineAPI.delKV(data, hashMap);
+                return response;
             case "testAndSet":
-                break;
+                response = StateMachineAPI.testAndSet(data, hashMap);
+                return response;
             default:
                 LOG.info("Wrong credencials");
         }
+
+        return "";
     }
 
 }
