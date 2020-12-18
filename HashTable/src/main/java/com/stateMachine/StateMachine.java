@@ -29,8 +29,6 @@ public class StateMachine extends BaseStateMachine {
         final String[] operation = entry.getStateMachineLogEntry().getLogData().toString(Charset.defaultCharset()).split(":");
         // operation[0] = operation(set, get, del, delKV, testAndSet)
         String response = selectService(operation[0], operation);
-        LOG.info("Response ratis: " + response);
-        LOG.debug("Map: " + hashMap);
         return CompletableFuture.completedFuture(Message.valueOf(response));
     }
 

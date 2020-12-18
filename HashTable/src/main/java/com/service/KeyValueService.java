@@ -34,7 +34,7 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
     @Override
     public synchronized void set(Set request, StreamObserver<Response> responseObserver){
         ByteString key = request.getKey();
-        String message = "set:" + key.toString(Charset.defaultCharset()) + ":" + request.getTimestamp() + ":" + request.getData().toString(Charset.defaultCharset());
+        String message = "set:" + key.toString(Charset.defaultCharset()) + ":" + request.getTimestamp() + ":" + request.getData().toStringUtf8();
         String response =  "";
 
         try {
