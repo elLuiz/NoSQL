@@ -1,6 +1,7 @@
 package com.service;
 
 import com.google.protobuf.ByteString;
+import com.hashTable.KeyValue;
 import com.hashTable.ResponseBuilder;
 import com.hashTable.hashTableServiceGrpc;
 import com.utils.BigIntegerHandler;
@@ -56,26 +57,15 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
         String response = sendTransactionalRequest(message);
         createResponse(responseStreamObserver, response.split(":"));
     }
-//
-//    @Override
-//    public synchronized void delKV(KeyValue.DelKV request, StreamObserver<Response> responseStreamObserver){
-//        BigInteger key = BigIntegerHandler.fromBytesStringToBigInteger(request.getKey());
-//        long version = request.getVersion();
-//        ValueHandler valueHandler;
-//        String messageStatus;
-//        if((valueHandler = storage.get(key)) == null){
-//            messageStatus = "ERROR_NE";
-//        }else{
-//            if(version == valueHandler.getVersion()){
-//                storage.remove(key);
-//                keyValueManager.notify(storage);
-//                messageStatus = "SUCCESS";
-//            }else{
-//                messageStatus = "ERROR_WV";
-//            }
-//        }
-//        createResponse(responseStreamObserver, valueHandler, messageStatus);
-//    }
+
+    @Override
+    public synchronized void delKV(KeyValue.DelKV request, StreamObserver<Response> responseStreamObserver){
+        ByteString key = request.getKey();
+        long version = request.getVersion();
+        String message = "delKV:" + key.toString(Charset.defaultCharset()) + ":" + version;
+        String response = sendTransactionalRequest(message);
+        createResponse(responseStreamObserver, response.split(":"));
+    }
 //
 //    @Override
 //    public synchronized void testAndSet(TestAndSet request, StreamObserver<Response> responseObserver){
@@ -131,7 +121,6 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
             LOGGER.log(Level.WARNING, "Error: " + ioException.getMessage());
             LOGGER.log(Level.WARNING, "Cause: " + ioException.getCause());
         }
-
         return response;
     }
 
@@ -146,7 +135,6 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
             LOGGER.log(Level.WARNING, "Error: " + ioException.getMessage());
             LOGGER.log(Level.WARNING, "Cause: " + ioException.getCause());
         }
-
         return response;
     }
 }
