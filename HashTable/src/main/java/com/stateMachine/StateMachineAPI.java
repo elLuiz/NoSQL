@@ -88,7 +88,30 @@ public class StateMachineAPI {
 
     // Guilherme
     protected static String testAndSet(String []data, ConcurrentHashMap<BigInteger, ValueHandler> hashMap){
-        return "";
+        BigInteger key = BigIntegerHandler.fromStringToBigInteger(data[1]);
+        long valueTimestamp = LongHandler.convertFromStringToLong(data[2]);
+        byte[] valueDataBytes = data[3].getBytes(StandardCharsets.UTF_8);
+        long version = LongHandler.convertFromStringToLong(data[4]);
+        ValueHandler valueHandler;
+        String response;
+
+        if ((valueHandler = hashMap.get(key)) == null){
+            response = createResponse("ERROR_NE", null);
+        }else {
+            if (valueHandler.getVersion() == version){
+                valueHandler = new ValueHandler();
+                valueHandler.setData(valueDataBytes);
+                valueHandler.setTimestamp(valueTimestamp);
+                valueHandler.setVersion(version + 1);
+                hashMap.put(key, valueHandler);
+
+                response = createResponse("SUCCESS", valueHandler);
+            }else {
+                response = createResponse("ERROR_WV", valueHandler);
+            }
+        }
+
+        return response;
     }
 
     private static String createResponse(String status, ValueHandler valueHandler){

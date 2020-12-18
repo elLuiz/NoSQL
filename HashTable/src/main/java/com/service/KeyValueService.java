@@ -66,29 +66,17 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
         String response = sendTransactionalRequest(message);
         createResponse(responseStreamObserver, response.split(":"));
     }
-//
-//    @Override
-//    public synchronized void testAndSet(TestAndSet request, StreamObserver<Response> responseObserver){
-//        BigInteger key = BigIntegerHandler.fromBytesStringToBigInteger(request.getKey());
-//        Long version = request.getVersion();
-//        LOGGER.log(Level.INFO, "" + version);
-//        ValueHandler valueHandlerGet;
-//        String messageStatus;
-//
-//        if ((valueHandlerGet = storage.get(key)) == null){
-//            messageStatus = "ERROR_NE";
-//        } else {
-//            if (valueHandlerGet.getVersion() == version) {
-//                valueHandlerGet = ValueHandler.testAndSetValueHandler(request);
-//                storage.put(key, valueHandlerGet);
-//                messageStatus = "SUCCESS";
-//                keyValueManager.notify(storage);
-//            } else {
-//                messageStatus = "ERROR_WV";
-//            }
-//        }
-//        createResponse(responseObserver, valueHandlerGet, messageStatus);
-//    }
+
+    @Override
+    public synchronized void testAndSet(TestAndSet request, StreamObserver<Response> responseObserver){
+        ByteString key = request.getKey();
+        String message = "testAndSet:" + key.toString(Charset.defaultCharset()) +
+                ":" + request.getValue().getTimestamp() +
+                ":" + request.getValue().getData() +
+                ":" + request.getVersion();
+        String response = sendTransactionalRequest(message);
+        createResponse(responseObserver, response.split(":"));
+    }
 
     private void createResponse(StreamObserver<Response> responseStreamObserver, String []result){
         ResponseBuilder responseBuilder = new ResponseBuilder();
