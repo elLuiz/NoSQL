@@ -42,6 +42,7 @@ public class StateMachineAPI {
     }
 
     //Luiz
+    // [0] -> del, [1] -> key
     protected static String del(String []data, ConcurrentHashMap<BigInteger, ValueHandler> hashMap){
         return "";
     }

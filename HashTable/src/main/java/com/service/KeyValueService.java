@@ -3,9 +3,11 @@ package com.service;
 import com.google.protobuf.ByteString;
 import com.hashTable.ResponseBuilder;
 import com.hashTable.hashTableServiceGrpc;
+import com.utils.BigIntegerHandler;
 import com.utils.LongHandler;
 import com.utils.ValueHandler;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
@@ -64,19 +66,12 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
 //    }
 //
 //    @Override
-//    public synchronized void del(Del request, StreamObserver<Response> responseStreamObserver){
-//        BigInteger key = BigIntegerHandler.fromBytesStringToBigInteger(request.getKey());
-//        ValueHandler valueHandler;
-//        String messageStatus;
-//        if((valueHandler = storage.remove(key)) == null){
-//            messageStatus = "ERROR";
-//        }
-//        else{
-//            messageStatus = "SUCCESS";
-//            keyValueManager.notify(storage);
-//        }
+    public synchronized void del(Del request, StreamObserver<Response> responseStreamObserver){
+        BigInteger key = BigIntegerHandler.fromBytesStringToBigInteger(request.getKey());
+        ValueHandler valueHandler;
+        String messageStatus;
 //        createResponse(responseStreamObserver, valueHandler, messageStatus);
-//    }
+    }
 //
 //    @Override
 //    public synchronized void delKV(KeyValue.DelKV request, StreamObserver<Response> responseStreamObserver){
