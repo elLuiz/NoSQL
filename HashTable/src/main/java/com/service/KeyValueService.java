@@ -51,19 +51,24 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
         createResponse(responseObserver, response.split(":"));
     }
 
-//    @Override
-//    public synchronized void get(Get request, StreamObserver<Response> responseObserver){
-//        BigInteger key = BigIntegerHandler.fromBytesStringToBigInteger(request.getKey());
-//        String messageStatus;
-//        ValueHandler valueHandler;
-//
-//        if((valueHandler = storage.get(key)) == null){
-//            messageStatus = "ERROR";
-//        }else{
-//            messageStatus = "SUCCESS";
-//        }
-//        createResponse(responseObserver, valueHandler, messageStatus);
-//    }
+    @Override
+    public synchronized void get(Get request, StreamObserver<Response> responseObserver){
+        ByteString key = request.getKey();
+        String message = "get:" + key.toString(Charset.defaultCharset());
+        String response =  "";
+
+        try {
+            LOGGER.log(Level.INFO, "Sending request." + message);
+            RaftClientReply reply;
+            reply = raftClient.sendReadOnly(Message.valueOf(message));
+            response = reply.getMessage().getContent().toString(Charset.defaultCharset());
+        }catch (IOException ioException){
+            LOGGER.log(Level.WARNING, "Error: " + ioException.getMessage());
+            LOGGER.log(Level.WARNING, "Cause: " + ioException.getCause());
+        }
+
+        createResponse(responseObserver, response.split(":"));
+    }
 //
 //    @Override
     public synchronized void del(Del request, StreamObserver<Response> responseStreamObserver){
