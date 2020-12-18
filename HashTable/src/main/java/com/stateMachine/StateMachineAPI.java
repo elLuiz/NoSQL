@@ -51,12 +51,39 @@ public class StateMachineAPI {
     }
 
     //Luiz
+    // [0] -> del, [1] -> key
     protected static String del(String []data, ConcurrentHashMap<BigInteger, ValueHandler> hashMap){
-        return "";
+        BigInteger key = BigIntegerHandler.fromStringToBigInteger(data[1]);
+        String response;
+        ValueHandler valueHandler;
+        if((valueHandler = hashMap.remove(key)) == null){
+            response = "ERROR:NULL";
+        }else{
+            response = "SUCCESS:" + valueHandler.getVersion() + ":" + valueHandler.getTimestamp() + ":" + new String(valueHandler.getData(), StandardCharsets.UTF_8);
+        }
+
+        return response;
     }
     //Luiz
+    // [0]-> delKV, [1]->key, [2]->version
     protected static String delKV(String []data, ConcurrentHashMap<BigInteger, ValueHandler> hashMap){
-        return "";
+        BigInteger key = BigIntegerHandler.fromStringToBigInteger(data[1]);
+        long version = LongHandler.convertFromStringToLong(data[2]);
+        ValueHandler valueHandler;
+        String response;
+
+        if((valueHandler = hashMap.get(key)) == null){
+            response = "ERROR_NE:NULL";
+        }else{
+            if(valueHandler.getVersion() != version){
+                response = "ERROR_WV:" + valueHandler.getVersion() + ":" + valueHandler.getTimestamp() + ":" + new String(valueHandler.getData(), StandardCharsets.UTF_8);
+            }else{
+                hashMap.remove(key);
+                response = "SUCCESS:"+ valueHandler.getVersion() + ":" + valueHandler.getTimestamp() + ":" + new String(valueHandler.getData(), StandardCharsets.UTF_8);
+            }
+        }
+
+        return response;
     }
 
     // Guilherme

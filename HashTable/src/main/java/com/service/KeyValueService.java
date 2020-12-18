@@ -3,9 +3,11 @@ package com.service;
 import com.google.protobuf.ByteString;
 import com.hashTable.ResponseBuilder;
 import com.hashTable.hashTableServiceGrpc;
+import com.utils.BigIntegerHandler;
 import com.utils.LongHandler;
 import com.utils.ValueHandler;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
@@ -35,17 +37,7 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
     public synchronized void set(Set request, StreamObserver<Response> responseObserver){
         ByteString key = request.getKey();
         String message = "set:" + key.toString(Charset.defaultCharset()) + ":" + request.getTimestamp() + ":" + request.getData().toStringUtf8();
-        String response =  "";
-
-        try {
-            LOGGER.log(Level.INFO, "Sending request." + message);
-            RaftClientReply reply;
-            reply = raftClient.send(Message.valueOf(message));
-            response = reply.getMessage().getContent().toString(Charset.defaultCharset());
-        }catch (IOException ioException){
-            LOGGER.log(Level.WARNING, "Error: " + ioException.getMessage());
-            LOGGER.log(Level.WARNING, "Cause: " + ioException.getCause());
-        }
+        String response =  sendTransactionalRequest(message);
         createResponse(responseObserver, response.split(":"));
     }
 
@@ -53,35 +45,17 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
     public synchronized void get(Get request, StreamObserver<Response> responseObserver){
         ByteString key = request.getKey();
         String message = "get:" + key.toString(Charset.defaultCharset());
-        String response =  "";
-
-        try {
-            LOGGER.log(Level.INFO, "Sending request." + message);
-            RaftClientReply reply;
-            reply = raftClient.sendReadOnly(Message.valueOf(message));
-            response = reply.getMessage().getContent().toString(Charset.defaultCharset());
-        }catch (IOException ioException){
-            LOGGER.log(Level.WARNING, "Error: " + ioException.getMessage());
-            LOGGER.log(Level.WARNING, "Cause: " + ioException.getCause());
-        }
-
+        String response = sendQuery(message);
         createResponse(responseObserver, response.split(":"));
     }
-//
-//    @Override
-//    public synchronized void del(Del request, StreamObserver<Response> responseStreamObserver){
-//        BigInteger key = BigIntegerHandler.fromBytesStringToBigInteger(request.getKey());
-//        ValueHandler valueHandler;
-//        String messageStatus;
-//        if((valueHandler = storage.remove(key)) == null){
-//            messageStatus = "ERROR";
-//        }
-//        else{
-//            messageStatus = "SUCCESS";
-//            keyValueManager.notify(storage);
-//        }
-//        createResponse(responseStreamObserver, valueHandler, messageStatus);
-//    }
+
+    @Override
+    public synchronized void del(Del request, StreamObserver<Response> responseStreamObserver){
+        ByteString key = request.getKey();
+        String message = "del:" + key.toString(Charset.defaultCharset());
+        String response = sendTransactionalRequest(message);
+        createResponse(responseStreamObserver, response.split(":"));
+    }
 //
 //    @Override
 //    public synchronized void delKV(KeyValue.DelKV request, StreamObserver<Response> responseStreamObserver){
@@ -144,5 +118,35 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
             responseStreamObserver.onNext(responseBuilder.buildResponse(valueHandler));
         }
         responseStreamObserver.onCompleted();
+    }
+
+    private String sendTransactionalRequest(String request){
+        String response =  "";
+        try {
+            LOGGER.log(Level.INFO, "Sending transaction:" + request);
+            RaftClientReply reply;
+            reply = raftClient.send(Message.valueOf(request));
+            response = reply.getMessage().getContent().toString(Charset.defaultCharset());
+        }catch (IOException ioException){
+            LOGGER.log(Level.WARNING, "Error: " + ioException.getMessage());
+            LOGGER.log(Level.WARNING, "Cause: " + ioException.getCause());
+        }
+
+        return response;
+    }
+
+    private String sendQuery(String query){
+        String response =  "";
+        try {
+            LOGGER.log(Level.INFO, "Sending query:" + query);
+            RaftClientReply reply;
+            reply = raftClient.sendReadOnly(Message.valueOf(query));
+            response = reply.getMessage().getContent().toString(Charset.defaultCharset());
+        }catch (IOException ioException){
+            LOGGER.log(Level.WARNING, "Error: " + ioException.getMessage());
+            LOGGER.log(Level.WARNING, "Cause: " + ioException.getCause());
+        }
+
+        return response;
     }
 }
