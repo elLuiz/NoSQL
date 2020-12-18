@@ -43,9 +43,9 @@ public class StateMachineAPI {
         String response;
 
         if ((valueHandler = hashMap.get(key)) == null){
-            response = "ERROR";
+            response = "ERROR:NULL";
         } else {
-            response = "SUCCESS" + valueHandler.getVersion() + ":" + valueHandler.getTimestamp() + ":" + valueHandler.getData();
+            response = "SUCCESS:" + valueHandler.getVersion() + ":" + valueHandler.getTimestamp() + ":" + new String(valueHandler.getData(), StandardCharsets.UTF_8);
         }
         return response;
     }
@@ -58,6 +58,7 @@ public class StateMachineAPI {
     protected static String delKV(String []data, ConcurrentHashMap<BigInteger, ValueHandler> hashMap){
         return "";
     }
+
     // Guilherme
     protected static String testAndSet(String []data, ConcurrentHashMap<BigInteger, ValueHandler> hashMap){
         return "";
