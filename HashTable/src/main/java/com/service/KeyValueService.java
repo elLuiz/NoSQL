@@ -48,19 +48,26 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
         createResponse(responseObserver, null, "SUCCESS");
     }
 
-//    @Override
-//    public synchronized void get(Get request, StreamObserver<Response> responseObserver){
-//        BigInteger key = BigIntegerHandler.fromBytesStringToBigInteger(request.getKey());
-//        String messageStatus;
-//        ValueHandler valueHandler;
-//
-//        if((valueHandler = storage.get(key)) == null){
-//            messageStatus = "ERROR";
-//        }else{
-//            messageStatus = "SUCCESS";
-//        }
-//        createResponse(responseObserver, valueHandler, messageStatus);
-//    }
+    @Override
+    public synchronized void get(Get request, StreamObserver<Response> responseObserver){
+        ByteString key = request.getKey();
+        String message = "get:" + key;
+        LOGGER.log(Level.INFO, "Key: " + key);
+
+        try {
+            LOGGER.log(Level.INFO, "Sending request.");
+            RaftClientReply reply;
+            reply = raftClient.sendReadOnly(Message.valueOf(message));
+            String response = reply.getMessage().getContent().toString(Charset.defaultCharset());
+            LOGGER.log(Level.INFO, "Sent");
+            System.out.println(response);
+        }catch (IOException ioException){
+            LOGGER.log(Level.WARNING, "Error: " + ioException.getMessage());
+            LOGGER.log(Level.WARNING, "Cause: " + ioException.getCause());
+        }
+
+        createResponse(responseObserver, null, "SUCESS");
+    }
 //
 //    @Override
 //    public synchronized void del(Del request, StreamObserver<Response> responseStreamObserver){

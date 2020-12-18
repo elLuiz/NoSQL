@@ -1,5 +1,6 @@
 package com.stateMachine;
 
+import com.utils.BigIntegerHandler;
 import com.utils.ValueHandler;
 
 import java.math.BigInteger;
@@ -15,7 +16,16 @@ public class StateMachineAPI {
 
     //Guilherme
     protected static String get(String []data, ConcurrentHashMap<BigInteger, ValueHandler> hashMap){
-        return "";
+        BigInteger key = BigIntegerHandler.fromStringToBigInteger(data[1]);
+        ValueHandler valueHandler;
+        String response;
+
+        if ((valueHandler = hashMap.get(key)) == null){
+            response = "ERROR";
+        } else {
+            response = "SUCCESS" + valueHandler.getVersion() + ":" + valueHandler.getTimestamp() + ":" + valueHandler.getData();
+        }
+        return response;
     }
 
     //Luiz
