@@ -13,11 +13,7 @@ public class RatisConnection {
     public static final String GROUP_ID = "raft_group____id";
 
     public static Map<String, InetSocketAddress> createAddressesMap(){
-        Map<String, InetSocketAddress> addressMap = new HashMap<>();
-        addressMap.put("p1", new InetSocketAddress("127.0.0.1", 3000));
-        addressMap.put("p2", new InetSocketAddress("127.0.0.1", 4000));
-        addressMap.put("p3", new InetSocketAddress("127.0.0.1", 4500));
-
+        Map<String, InetSocketAddress> addressMap = ConnectionProps.readConfigFile();
         return addressMap;
     }
 
