@@ -1,13 +1,15 @@
 # Banco de dados NoSQL
 
 ![Java e gRPC](https://img.shields.io/badge/JAVA-gRPC-yellow)
+![Ratis](https://img.shields.io/badge/%20-Ratis-brightgreen)
 
 Projeto feito por alunos da Universidade Federal de Uberlândia na matéria de Sistemas Distribuídos dos professores *Lásaro Jonas Camargos* e *Paulo Rodolfo da Silva Leite Coelho*.
 
 ## Objetivos
 
 - Hash Table acessível remotamente por interface CRUD usando gRPC.
-- Armazenamento em disco com recuperação de dados no caso de falhas
+- Armazenamento em disco com recuperação de dados no caso de falhas.
+- Replicar o servidor para obter tolerância a falhas.
 
 ## Especificações
 
@@ -19,7 +21,7 @@ Projeto feito por alunos da Universidade Federal de Uberlândia na matéria de S
 
 # Download e execução
 
-- Faça o clone do repositório com o comando: `git clone https://github.com/Fritask/TrabalhoSD.git`
+- Faça o clone do repositório com o comando: `git clone https://github.com/elLuiz/NoSQL.git`
 - Certifique-se que está na branch master;
 - Abra o repositório na sua IDE de preferência como um *projeto maven*;
 - Com o projeto aberto, é preciso fazer o build como *MAVEN BUILD* no arquivo *`pom.xml`*;
