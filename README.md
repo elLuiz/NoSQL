@@ -1,13 +1,15 @@
 # Banco de dados NoSQL
 
 ![Java e gRPC](https://img.shields.io/badge/JAVA-gRPC-yellow)
+![Ratis](https://img.shields.io/badge/%20-Ratis-brightgreen)
 
 Projeto feito por alunos da Universidade Federal de Uberlândia na matéria de Sistemas Distribuídos dos professores *Lásaro Jonas Camargos* e *Paulo Rodolfo da Silva Leite Coelho*.
 
 ## Objetivos
 
 - Hash Table acessível remotamente por interface CRUD usando gRPC.
-- Armazenamento em disco com recuperação de dados no caso de falhas
+- Armazenamento em disco com recuperação de dados no caso de falhas.
+- Replicar o servidor para obter tolerância a falhas.
 
 ## Especificações
 
@@ -19,35 +21,31 @@ Projeto feito por alunos da Universidade Federal de Uberlândia na matéria de S
 
 # Download e execução
 
-- Faça o clone do repositório com o comando:
-    `GIT
-        git clone https://github.com/Fritask/TrabalhoSD.git
-    `
+- Faça o clone do repositório com o comando: `git clone https://github.com/elLuiz/NoSQL.git`
 - Certifique-se que está na branch master;
 - Abra o repositório na sua IDE de preferência como um *projeto maven*;
 - Com o projeto aberto, é preciso fazer o build como *MAVEN BUILD* no arquivo *`pom.xml`*;
 ## IDE
 - *Como executar o servidor utlizando IDE:*
-    - Entre na pasta *`src/main/java/com/server/`* e execute como uma *aplicação JAVA* o arquivo *`KeyValueServer.java`*
+    - Entre na pasta `src/main/java/com/server/` e execute como uma *aplicação JAVA* o arquivo `KeyValueServer.java`
 - *Como executar o cliente utlizando IDE:*
-    - Entre na pasta *`src/main/java/com/client/`* e execute como uma *aplicação JAVA* o arquivo *`Client.java`*
-`JSON
+    - Entre na pasta `src/main/java/com/client/` e execute como uma *aplicação JAVA* o arquivo `Client.java`
+````JSON
 Observação: "para que qualquer mudança realizada no cliente tenha o efeito desejado, compilar todo o código novamente."
-`
+````
 
 - *Como executar os testes utilizando IDE:*
-    - *teste de estresse com 1000 dados para testar cada função:* com o servidor executando (é preciso que ele esteja rodando) execute os testes no arquivo *`src/test/java/com/test/Client/ClientStressTest.java`* utilizando o JUnit.
-    - *teste básico com 10 dados para testar cada função:* com o servidor executando (é preciso que ele esteja rodando) execute os testes no arquivo *`src/test/java/com/test/Client/ClientTest.java`* utilizando o JUnit.
-## Termninal
-- *Compilação*
-*`mvn compile`*
-- *Server*
-*`mvn exec:java -Dexec.mainClass="com.server.KeyValueServer"`*
-- *UI Client*
-*`mvn exec:java -Dexec.mainClass="com.client.Client"`*
-- *Testes*
-*`mvn -Dtest=ClientStressTest test`*
-*`mvn -Dtest=ClientTest test`*
+    - *teste de estresse com 1000 dados para testar cada função:* com o servidor executando (é preciso que ele esteja rodando) execute os testes no arquivo `src/test/java/com/test/Client/ClientStressTest.java` utilizando o JUnit.
+    - *teste básico com 10 dados para testar cada função:* com o servidor executando (é preciso que ele esteja rodando) execute os testes no arquivo `src/test/java/com/test/Client/ClientTest.java` utilizando o JUnit.
+## Terminal
+- *Compilação:* `mvn compile`
+- *Server:* `mvn exec:java -Dexec.mainClass="com.server.KeyValueServer" -Dexec.args="-grpc 909* -id p*"`
+- *UI Client:* `mvn exec:java -Dexec.mainClass="com.client.Client" -Dexec.args="909*"`
+- *Teste de estresse:* `mvn -Dtest=ClientStressTest test`  
+- *Teste básico:* `mvn -Dtest=ClientTest test`
+- *Como executar servidores e cliente utilizando os .jar?*
+- *Server:* `java -cp target/hashTable-0.0.1-SNAPSHOT-jar-with-dependencies.jar com.server.KeyValueServer -grpc 909* -id p*`
+- *Client:* `java -cp target/hashTable-0.0.1-SNAPSHOT-jar-with-dependencies.jar com.client.Client 909*`
 
 ## Membros do Grupo
 
