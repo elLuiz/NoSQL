@@ -1,12 +1,16 @@
 package com.service;
 
-import com.disk.DiskOperations;
+import com.google.protobuf.ByteString;
+import com.hashTable.KeyValue;
 import com.hashTable.ResponseBuilder;
 import com.hashTable.hashTableServiceGrpc;
 import com.utils.BigIntegerHandler;
+import com.utils.LongHandler;
 import com.utils.ValueHandler;
+import java.io.IOException;
 import java.math.BigInteger;
-import java.util.concurrent.ConcurrentHashMap;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import com.hashTable.KeyValue.Set;
@@ -15,122 +19,114 @@ import com.hashTable.KeyValue.Del;
 import com.hashTable.KeyValue.TestAndSet;
 import com.hashTable.KeyValue.Response;
 import io.grpc.stub.StreamObserver;
+import org.apache.ratis.client.RaftClient;
+import com.client.ratis.RatisClient;
+import org.apache.ratis.protocol.Message;
+import org.apache.ratis.protocol.RaftClientReply;
 
 public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBase {
-    private KeyValueManager keyValueManager = KeyValueManager.getInstance();
-    private ConcurrentHashMap<BigInteger, ValueHandler> storage;
     private final static Logger LOGGER = Logger.getLogger(KeyValueService.class.getName());
+    private RaftClient raftClient;
 
     public KeyValueService(){
-        DiskOperations diskOperation = new DiskOperations();
-        storage = diskOperation.retrieveRecords();
-        if(storage == null){
-            LOGGER.log(Level.WARNING, "Could not retrieve data");
-        }else{
-            LOGGER.log(Level.INFO, "Map loaded: " + storage.hashCode());
-        }
-    }
-
-    public synchronized void set(Set request, StreamObserver<Response> responseObserver){
-        BigInteger key = BigIntegerHandler.fromBytesStringToBigInteger(request.getKey());
-        String messageStatus = "";
-        ValueHandler valueHandler;
-
-        if((valueHandler = storage.get(key)) == null){
-            valueHandler = ValueHandler.setValueHandler(request);
-            messageStatus = "SUCCESS";
-            storage.put(key, valueHandler);
-            keyValueManager.notify(storage);
-            // Pois v' = Null
-            valueHandler = null;
-        }else{
-            messageStatus = "ERROR";
-        }
-
-        createResponse(responseObserver, valueHandler, messageStatus);
+        RatisClient ratisConnection = new RatisClient();
+        ratisConnection.connectToRatisServer();
+        raftClient = ratisConnection.setClientProprieties();
     }
 
     @Override
-    public synchronized void get(Get request, StreamObserver<Response> responseObserver){
-        BigInteger key = BigIntegerHandler.fromBytesStringToBigInteger(request.getKey());
-        String messageStatus;
-        ValueHandler valueHandler;
+    public void set(Set request, StreamObserver<Response> responseObserver){
+        ByteString key = request.getKey();
+        String message = "set:" + key.toString(Charset.defaultCharset()) + ":" + request.getTimestamp() + ":" + request.getData().toStringUtf8();
+        String response =  sendTransactionalRequest(message);
+        createResponse(responseObserver, response.split(":"));
+    }
 
-        if((valueHandler = storage.get(key)) == null){
-            messageStatus = "ERROR";
-        }else{
-            messageStatus = "SUCCESS";
-        }
-        createResponse(responseObserver, valueHandler, messageStatus);
+    @Override
+    public void get(Get request, StreamObserver<Response> responseObserver){
+        ByteString key = request.getKey();
+        String message = "get:" + key.toString(Charset.defaultCharset());
+        String response = sendQuery(message);
+        createResponse(responseObserver, response.split(":"));
     }
 
     @Override
     public synchronized void del(Del request, StreamObserver<Response> responseStreamObserver){
-        BigInteger key = BigIntegerHandler.fromBytesStringToBigInteger(request.getKey());
-        long version = request.getVersion();
-        if(version > 0)
-            delKeyVersion(key, version, responseStreamObserver);
-        else
-            delKey(key, responseStreamObserver);
-    }
-
-    public synchronized void delKey(BigInteger key, StreamObserver<Response> responseStreamObserver){
-        ValueHandler valueHandler;
-        String messageStatus;
-        if((valueHandler = storage.remove(key)) == null){
-            messageStatus = "ERROR";
-        }
-        else{
-            messageStatus = "SUCCESS";
-            keyValueManager.notify(storage);
-        }
-        createResponse(responseStreamObserver, valueHandler, messageStatus);
-    }
-
-    public synchronized void delKeyVersion(BigInteger key, long version, StreamObserver<Response> responseStreamObserver){
-        ValueHandler valueHandler;
-        String messageStatus;
-        if((valueHandler = storage.get(key)) == null){
-            messageStatus = "ERROR_NE";
-        }else{
-            if(version == valueHandler.getVersion()){
-                storage.remove(key);
-                keyValueManager.notify(storage);
-                messageStatus = "SUCCESS";
-            }else{
-                messageStatus = "ERROR_WV";
-            }
-        }
-        createResponse(responseStreamObserver, valueHandler, messageStatus);
+        ByteString key = request.getKey();
+        String message = "del:" + key.toString(Charset.defaultCharset());
+        String response = sendTransactionalRequest(message);
+        createResponse(responseStreamObserver, response.split(":"));
     }
 
     @Override
-    public synchronized void testAndSet(TestAndSet request, StreamObserver<Response> responseObserver){
-        BigInteger key = BigIntegerHandler.fromBytesStringToBigInteger(request.getKey());
-        Long version = request.getVersion();
-        LOGGER.log(Level.INFO, "" + version);
-        ValueHandler valueHandlerGet;
-        String messageStatus;
-
-        if ((valueHandlerGet = storage.get(key)) == null){
-            messageStatus = "ERROR_NE";
-        } else {
-            if (valueHandlerGet.getVersion() == version) {
-                valueHandlerGet = ValueHandler.testAndSetValueHandler(request);
-                storage.put(key, valueHandlerGet);
-                messageStatus = "SUCCESS";
-                keyValueManager.notify(storage);
-            } else {
-                messageStatus = "ERROR_WV";
-            }
-        }
-        createResponse(responseObserver, valueHandlerGet, messageStatus);
+    public synchronized void delKV(KeyValue.DelKV request, StreamObserver<Response> responseStreamObserver){
+        ByteString key = request.getKey();
+        long version = request.getVersion();
+        String message = "delKV:" + key.toString(Charset.defaultCharset()) + ":" + version;
+        String response = sendTransactionalRequest(message);
+        createResponse(responseStreamObserver, response.split(":"));
     }
 
-    private void createResponse(StreamObserver<Response> responseStreamObserver, ValueHandler valueHandler, String message){
+    @Override
+    public void testAndSet(TestAndSet request, StreamObserver<Response> responseObserver){
+        ByteString key = request.getKey();
+        String message = "testAndSet:" + key.toString(Charset.defaultCharset()) +
+                ":" + request.getValue().getTimestamp() +
+                ":" + request.getValue().getData().toStringUtf8() +
+                ":" + request.getVersion();
+        String response = sendTransactionalRequest(message);
+        createResponse(responseObserver, response.split(":"));
+    }
+
+    private void createResponse(StreamObserver<Response> responseStreamObserver, String []result){
         ResponseBuilder responseBuilder = new ResponseBuilder();
-        responseBuilder.setResponseMessage(message);
-        responseStreamObserver.onNext(responseBuilder.buildResponse(valueHandler));
+        responseBuilder.setResponseMessage(result[0]);
+
+        if(result.length == 2){
+            responseStreamObserver.onNext(responseBuilder.buildResponse(null));
+        }else{
+            ValueHandler valueHandler = new ValueHandler();
+            long version = LongHandler.convertFromStringToLong(result[1]);
+            long timestamp = LongHandler.convertFromStringToLong(result[2]);
+            byte[] data = result[3].getBytes(Charset.defaultCharset());
+
+            valueHandler.setVersion(version);
+            valueHandler.setTimestamp(timestamp);
+            valueHandler.setData(data);
+            responseStreamObserver.onNext(responseBuilder.buildResponse(valueHandler));
+        }
         responseStreamObserver.onCompleted();
+    }
+
+    private String sendTransactionalRequest(String request){
+        String response =  "";
+        try {
+            LOGGER.log(Level.INFO, "Sending transaction:" + request);
+            RaftClientReply reply;
+            synchronized (KeyValueService.class){
+                reply = raftClient.send(Message.valueOf(request));
+            }
+            response = reply.getMessage().getContent().toString(Charset.defaultCharset());
+        }catch (IOException ioException){
+            LOGGER.log(Level.WARNING, "Error: " + ioException.getMessage());
+            LOGGER.log(Level.WARNING, "Cause: " + ioException.getCause());
+        }
+        return response;
+    }
+
+    private String sendQuery(String query){
+        String response =  "";
+        try {
+            LOGGER.log(Level.INFO, "Sending query:" + query);
+            RaftClientReply reply;
+            synchronized (KeyValueService.class){
+                reply = raftClient.sendReadOnly(Message.valueOf(query));
+            }
+            response = reply.getMessage().getContent().toString(Charset.defaultCharset());
+        }catch (IOException ioException){
+            LOGGER.log(Level.WARNING, "Error: " + ioException.getMessage());
+            LOGGER.log(Level.WARNING, "Cause: " + ioException.getCause());
+        }
+        return response;
     }
 }

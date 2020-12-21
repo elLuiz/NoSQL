@@ -123,6 +123,38 @@ public final class hashTableServiceGrpc {
      return getDelMethod;
   }
 
+  private static volatile io.grpc.MethodDescriptor<com.hashTable.KeyValue.DelKV,
+      com.hashTable.KeyValue.Response> getDelKVMethod;
+
+  @io.grpc.stub.annotations.RpcMethod(
+      fullMethodName = SERVICE_NAME + '/' + "delKV",
+      requestType = com.hashTable.KeyValue.DelKV.class,
+      responseType = com.hashTable.KeyValue.Response.class,
+      methodType = io.grpc.MethodDescriptor.MethodType.UNARY)
+  public static io.grpc.MethodDescriptor<com.hashTable.KeyValue.DelKV,
+      com.hashTable.KeyValue.Response> getDelKVMethod() {
+    io.grpc.MethodDescriptor<com.hashTable.KeyValue.DelKV, com.hashTable.KeyValue.Response> getDelKVMethod;
+    if ((getDelKVMethod = hashTableServiceGrpc.getDelKVMethod) == null) {
+      synchronized (hashTableServiceGrpc.class) {
+        if ((getDelKVMethod = hashTableServiceGrpc.getDelKVMethod) == null) {
+          hashTableServiceGrpc.getDelKVMethod = getDelKVMethod = 
+              io.grpc.MethodDescriptor.<com.hashTable.KeyValue.DelKV, com.hashTable.KeyValue.Response>newBuilder()
+              .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+              .setFullMethodName(generateFullMethodName(
+                  "hashTableService", "delKV"))
+              .setSampledToLocalTracing(true)
+              .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.hashTable.KeyValue.DelKV.getDefaultInstance()))
+              .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+                  com.hashTable.KeyValue.Response.getDefaultInstance()))
+                  .setSchemaDescriptor(new hashTableServiceMethodDescriptorSupplier("delKV"))
+                  .build();
+          }
+        }
+     }
+     return getDelKVMethod;
+  }
+
   private static volatile io.grpc.MethodDescriptor<com.hashTable.KeyValue.TestAndSet,
       com.hashTable.KeyValue.Response> getTestAndSetMethod;
 
@@ -205,6 +237,13 @@ public final class hashTableServiceGrpc {
 
     /**
      */
+    public void delKV(com.hashTable.KeyValue.DelKV request,
+        io.grpc.stub.StreamObserver<com.hashTable.KeyValue.Response> responseObserver) {
+      asyncUnimplementedUnaryCall(getDelKVMethod(), responseObserver);
+    }
+
+    /**
+     */
     public void testAndSet(com.hashTable.KeyValue.TestAndSet request,
         io.grpc.stub.StreamObserver<com.hashTable.KeyValue.Response> responseObserver) {
       asyncUnimplementedUnaryCall(getTestAndSetMethod(), responseObserver);
@@ -233,6 +272,13 @@ public final class hashTableServiceGrpc {
                 com.hashTable.KeyValue.Del,
                 com.hashTable.KeyValue.Response>(
                   this, METHODID_DEL)))
+          .addMethod(
+            getDelKVMethod(),
+            asyncUnaryCall(
+              new MethodHandlers<
+                com.hashTable.KeyValue.DelKV,
+                com.hashTable.KeyValue.Response>(
+                  this, METHODID_DEL_KV)))
           .addMethod(
             getTestAndSetMethod(),
             asyncUnaryCall(
@@ -288,6 +334,14 @@ public final class hashTableServiceGrpc {
 
     /**
      */
+    public void delKV(com.hashTable.KeyValue.DelKV request,
+        io.grpc.stub.StreamObserver<com.hashTable.KeyValue.Response> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(getDelKVMethod(), getCallOptions()), request, responseObserver);
+    }
+
+    /**
+     */
     public void testAndSet(com.hashTable.KeyValue.TestAndSet request,
         io.grpc.stub.StreamObserver<com.hashTable.KeyValue.Response> responseObserver) {
       asyncUnaryCall(
@@ -332,6 +386,13 @@ public final class hashTableServiceGrpc {
     public com.hashTable.KeyValue.Response del(com.hashTable.KeyValue.Del request) {
       return blockingUnaryCall(
           getChannel(), getDelMethod(), getCallOptions(), request);
+    }
+
+    /**
+     */
+    public com.hashTable.KeyValue.Response delKV(com.hashTable.KeyValue.DelKV request) {
+      return blockingUnaryCall(
+          getChannel(), getDelKVMethod(), getCallOptions(), request);
     }
 
     /**
@@ -386,6 +447,14 @@ public final class hashTableServiceGrpc {
 
     /**
      */
+    public com.google.common.util.concurrent.ListenableFuture<com.hashTable.KeyValue.Response> delKV(
+        com.hashTable.KeyValue.DelKV request) {
+      return futureUnaryCall(
+          getChannel().newCall(getDelKVMethod(), getCallOptions()), request);
+    }
+
+    /**
+     */
     public com.google.common.util.concurrent.ListenableFuture<com.hashTable.KeyValue.Response> testAndSet(
         com.hashTable.KeyValue.TestAndSet request) {
       return futureUnaryCall(
@@ -396,7 +465,8 @@ public final class hashTableServiceGrpc {
   private static final int METHODID_SET = 0;
   private static final int METHODID_GET = 1;
   private static final int METHODID_DEL = 2;
-  private static final int METHODID_TEST_AND_SET = 3;
+  private static final int METHODID_DEL_KV = 3;
+  private static final int METHODID_TEST_AND_SET = 4;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -425,6 +495,10 @@ public final class hashTableServiceGrpc {
           break;
         case METHODID_DEL:
           serviceImpl.del((com.hashTable.KeyValue.Del) request,
+              (io.grpc.stub.StreamObserver<com.hashTable.KeyValue.Response>) responseObserver);
+          break;
+        case METHODID_DEL_KV:
+          serviceImpl.delKV((com.hashTable.KeyValue.DelKV) request,
               (io.grpc.stub.StreamObserver<com.hashTable.KeyValue.Response>) responseObserver);
           break;
         case METHODID_TEST_AND_SET:
@@ -495,6 +569,7 @@ public final class hashTableServiceGrpc {
               .addMethod(getSetMethod())
               .addMethod(getGetMethod())
               .addMethod(getDelMethod())
+              .addMethod(getDelKVMethod())
               .addMethod(getTestAndSetMethod())
               .build();
         }

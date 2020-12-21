@@ -53,8 +53,8 @@ public class Test extends ClientConnection {
         ByteString key;
         key = LongHandler.convertFromLongToByteString(generateRandomLong(left_limit, right_limit));
         long version = generateRandomLong(left_limit, 10L);
-        KeyValue.Del delRequest = createDelRequest(key, version);
-        KeyValue.Response response = clientKeyValueStub.del(delRequest);
+        KeyValue.DelKV delRequest = createDelRequest(key, version);
+        KeyValue.Response response = clientKeyValueStub.delKV(delRequest);
         displayMessage(key, "DELKV", response.getMessage());
     }
 
