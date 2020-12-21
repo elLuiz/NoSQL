@@ -39,10 +39,13 @@ Observação: "para que qualquer mudança realizada no cliente tenha o efeito de
     - *teste básico com 10 dados para testar cada função:* com o servidor executando (é preciso que ele esteja rodando) execute os testes no arquivo `src/test/java/com/test/Client/ClientTest.java` utilizando o JUnit.
 ## Terminal
 - *Compilação:* `mvn compile`
-- *Server:* `mvn exec:java -Dexec.mainClass="com.server.KeyValueServer" -Dexec.args="-grpcPort 1510 -ratis p2"`
-- *UI Client:* `mvn exec:java -Dexec.mainClass="com.client.Client" -Dexec.args="9090"`
+- *Server:* `mvn exec:java -Dexec.mainClass="com.server.KeyValueServer" -Dexec.args="-grpc 909* -id p*"`
+- *UI Client:* `mvn exec:java -Dexec.mainClass="com.client.Client" -Dexec.args="909*"`
 - *Teste de estresse:* `mvn -Dtest=ClientStressTest test`  
 - *Teste básico:* `mvn -Dtest=ClientTest test`
+- *Como executar servidores e cliente utilizando os .jar?*
+- *Server:* `java -cp target/hashTable-0.0.1-SNAPSHOT-jar-with-dependencies.jar com.server.KeyValueServer -grpc 909* -id p*`
+- *Client:* `java -cp target/hashTable-0.0.1-SNAPSHOT-jar-with-dependencies.jar com.client.Client 909*`
 
 ## Membros do Grupo
 
