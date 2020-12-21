@@ -35,7 +35,7 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
     }
 
     @Override
-    public synchronized void set(Set request, StreamObserver<Response> responseObserver){
+    public void set(Set request, StreamObserver<Response> responseObserver){
         ByteString key = request.getKey();
         String message = "set:" + key.toString(Charset.defaultCharset()) + ":" + request.getTimestamp() + ":" + request.getData().toStringUtf8();
         String response =  sendTransactionalRequest(message);
@@ -43,7 +43,7 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
     }
 
     @Override
-    public synchronized void get(Get request, StreamObserver<Response> responseObserver){
+    public void get(Get request, StreamObserver<Response> responseObserver){
         ByteString key = request.getKey();
         String message = "get:" + key.toString(Charset.defaultCharset());
         String response = sendQuery(message);
@@ -68,7 +68,7 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
     }
 
     @Override
-    public synchronized void testAndSet(TestAndSet request, StreamObserver<Response> responseObserver){
+    public void testAndSet(TestAndSet request, StreamObserver<Response> responseObserver){
         ByteString key = request.getKey();
         String message = "testAndSet:" + key.toString(Charset.defaultCharset()) +
                 ":" + request.getValue().getTimestamp() +
@@ -103,7 +103,9 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
         try {
             LOGGER.log(Level.INFO, "Sending transaction:" + request);
             RaftClientReply reply;
-            reply = raftClient.send(Message.valueOf(request));
+            synchronized (KeyValueService.class){
+                reply = raftClient.send(Message.valueOf(request));
+            }
             response = reply.getMessage().getContent().toString(Charset.defaultCharset());
         }catch (IOException ioException){
             LOGGER.log(Level.WARNING, "Error: " + ioException.getMessage());
@@ -117,7 +119,9 @@ public class KeyValueService extends hashTableServiceGrpc.hashTableServiceImplBa
         try {
             LOGGER.log(Level.INFO, "Sending query:" + query);
             RaftClientReply reply;
-            reply = raftClient.sendReadOnly(Message.valueOf(query));
+            synchronized (KeyValueService.class){
+                reply = raftClient.sendReadOnly(Message.valueOf(query));
+            }
             response = reply.getMessage().getContent().toString(Charset.defaultCharset());
         }catch (IOException ioException){
             LOGGER.log(Level.WARNING, "Error: " + ioException.getMessage());

@@ -8,9 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class StateMachineAPI {
-    // Luiz
-    // message:NULL
-    // message:version:timestamp:data
+
     // [0] -> operation, [1] -> key, [2] -> timestamp, [3] -> data
     protected static String set(String []data, ConcurrentHashMap<BigInteger, ValueHandler> hashMap){
         BigInteger key = BigIntegerHandler.fromStringToBigInteger(data[1]);
@@ -19,21 +17,18 @@ public class StateMachineAPI {
         ValueHandler valueHandler;
         String response;
         if((valueHandler = hashMap.get(key)) == null){
-            valueHandler = new ValueHandler();
-            valueHandler.setTimestamp(timestamp);
-            valueHandler.setData(dataBytes);
-            valueHandler.setVersion(1);
-            hashMap.put(key, valueHandler);
-
+            final ValueHandler value = new ValueHandler();
+            value.setTimestamp(timestamp);
+            value.setData(dataBytes);
+            value.setVersion(1);
+            hashMap.computeIfAbsent(key, v -> value);
             response = createResponse("SUCCESS", null);
         }else{
             response = createResponse("ERROR", valueHandler);
         }
-
         return response;
     }
 
-    //Guilherme
     protected static String get(String []data, ConcurrentHashMap<BigInteger, ValueHandler> hashMap){
         BigInteger key = BigIntegerHandler.fromStringToBigInteger(data[1]);
         ValueHandler valueHandler;
@@ -47,7 +42,6 @@ public class StateMachineAPI {
         return response;
     }
 
-    //Luiz
     // [0] -> del, [1] -> key
     protected static String del(String []data, ConcurrentHashMap<BigInteger, ValueHandler> hashMap){
         BigInteger key = BigIntegerHandler.fromStringToBigInteger(data[1]);
@@ -58,17 +52,15 @@ public class StateMachineAPI {
         }else{
             response = createResponse("SUCCESS", valueHandler);
         }
-
         return response;
     }
-    //Luiz
+
     // [0]-> delKV, [1]->key, [2]->version
     protected static String delKV(String []data, ConcurrentHashMap<BigInteger, ValueHandler> hashMap){
         BigInteger key = BigIntegerHandler.fromStringToBigInteger(data[1]);
         long version = LongHandler.convertFromStringToLong(data[2]);
         ValueHandler valueHandler;
         String response;
-
         if((valueHandler = hashMap.get(key)) == null){
             response = createResponse("ERROR_NE", null);
         }else{
@@ -79,11 +71,9 @@ public class StateMachineAPI {
                 response = createResponse("SUCCESS", valueHandler);
             }
         }
-
         return response;
     }
 
-    // Guilherme
     protected static String testAndSet(String []data, ConcurrentHashMap<BigInteger, ValueHandler> hashMap){
         BigInteger key = BigIntegerHandler.fromStringToBigInteger(data[1]);
         long valueTimestamp = LongHandler.convertFromStringToLong(data[2]);
@@ -96,18 +86,17 @@ public class StateMachineAPI {
             response = createResponse("ERROR_NE", null);
         }else {
             if (valueHandler.getVersion() == version){
-                valueHandler = new ValueHandler();
-                valueHandler.setData(valueDataBytes);
-                valueHandler.setTimestamp(valueTimestamp);
-                valueHandler.setVersion(version + 1);
-                hashMap.put(key, valueHandler);
+                final ValueHandler value = new ValueHandler();
+                value.setData(valueDataBytes);
+                value.setTimestamp(valueTimestamp);
+                value.setVersion(version + 1);
+                hashMap.computeIfPresent(key, (k, v) -> value);
 
-                response = createResponse("SUCCESS", valueHandler);
+                response = createResponse("SUCCESS", value);
             }else {
                 response = createResponse("ERROR_WV", valueHandler);
             }
         }
-
         return response;
     }
 
@@ -115,6 +104,7 @@ public class StateMachineAPI {
         if(valueHandler == null)
             return status + ":" + "NULL";
         else
-            return status + ":" + valueHandler.getVersion() + ":" + valueHandler.getTimestamp() + ":" + new String(valueHandler.getData(), StandardCharsets.UTF_8);
+            return status + ":" + valueHandler.getVersion() + ":" + valueHandler.getTimestamp()
+                    + ":" + new String(valueHandler.getData(), StandardCharsets.UTF_8);
     }
 }
