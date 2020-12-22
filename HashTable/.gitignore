@@ -1,4 +1,3 @@
-/target/
 .idea/
 .settings
 .project
@@ -8,4 +7,6 @@ HashTable.iml
 /src/main/java/com/disk/Main.java
 /src/main/java/com/hashTable/KeyValueClient.java
 /hashTable.ser
-/tmp/p*
+/tmp/p1
+/tmp/p2
+/tmp/p3
