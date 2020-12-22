@@ -16,7 +16,7 @@ public class ClientTest extends com.test.Client.Test {
 
     @BeforeAll
     static void init(){
-        connectToServer();
+        connectToServer(9091);
     }
 
     @Test

@@ -8,18 +8,26 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import com.hashTable.KeyValue.Response;
 import io.grpc.StatusRuntimeException;
+import jdk.internal.org.jline.utils.Log;
+
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class ClientConnection {
 	protected static ManagedChannelBuilder channelBuilder;
     protected static ManagedChannel channel;
     protected static hashTableServiceBlockingStub clientKeyValueStub;
+    private static final Logger LOGGER = Logger.getLogger(ClientConnection.class.getName());
 
-    public static void connectToServer(){
+    public static void connectToServer(int port){
         try {
-            channelBuilder = ManagedChannelBuilder.forAddress("localhost",9090).usePlaintext();
+            channelBuilder = ManagedChannelBuilder.forAddress("127.0.0.1",port).usePlaintext();
             channel = channelBuilder.build();
             clientKeyValueStub = hashTableServiceGrpc.newBlockingStub(channel);
+            LOGGER.log(Level.INFO, "Connected to port: " + port);
         }catch (StatusRuntimeException statusRuntimeException){
             System.out.println("An error has occurred");
             System.out.println(statusRuntimeException.getMessage());
@@ -51,8 +59,8 @@ public abstract class ClientConnection {
         return request.build();
     }
 
-    protected KeyValue.Del createDelRequest(ByteString key, long version){
-        KeyValue.Del.Builder request = KeyValue.Del.newBuilder();
+    protected KeyValue.DelKV createDelRequest(ByteString key, long version){
+        KeyValue.DelKV.Builder request = KeyValue.DelKV.newBuilder();
         request.setKey(key);
         request.setVersion(version);
         return request.build();
@@ -74,7 +82,7 @@ public abstract class ClientConnection {
 
     public void displayResponse(Response response){
         try {
-            String dataResponse = response.getValue().getData().toStringUtf8();
+            String dataResponse = response.getValue().getData().toString(StandardCharsets.UTF_8);
             long versionResponse = response.getValue().getVersion();
             long timestamp = response.getValue().getTimestamp();
             System.out.println("----------------RESPONSE--------------------");

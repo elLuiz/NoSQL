@@ -1,12 +1,24 @@
 package com.client;
 
 import com.client.api.ClientAPI;
+import com.connection.RatisConnection;
+import com.hashTable.KeyValue;
+import org.apache.ratis.client.RaftClient;
+import org.apache.ratis.conf.Parameters;
+import org.apache.ratis.conf.RaftProperties;
+import org.apache.ratis.grpc.GrpcFactory;
+import org.apache.ratis.protocol.*;
+import org.apache.ratis.thirdparty.com.google.protobuf.ByteString;
 
+import java.net.InetSocketAddress;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
-public class Client {
+public class Client extends RatisConnection {
+
     public static void main(String []args){
-        ClientAPI.connectToServer();
+        ClientAPI.connectToServer(Integer.parseInt(args[0]));
         selectService();
     }
 
