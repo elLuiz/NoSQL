@@ -24,7 +24,7 @@ Projeto feito por alunos da Universidade Federal de Uberlândia na matéria de S
 - Faça o clone do repositório com o comando: `git clone https://github.com/elLuiz/NoSQL.git`
 - Certifique-se que está na branch master;
 - Abra o repositório na sua IDE de preferência como um *projeto maven*;
-- Com o projeto aberto, é preciso fazer o build como *MAVEN BUILD* no arquivo *`pom.xml`*;
+- Com o projeto aberto, é preciso fazer o build como *MAVEN BUILD* no arquivo `pom.xml`;
 ## IDE
 - *Como executar o servidor utlizando IDE:*
     - Entre na pasta `src/main/java/com/server/` e execute como uma *aplicação JAVA* o arquivo `KeyValueServer.java`
@@ -43,7 +43,9 @@ Observação: "para que qualquer mudança realizada no cliente tenha o efeito de
 - *UI Client:* `mvn exec:java -Dexec.mainClass="com.client.Client" -Dexec.args="909*"`
 - *Teste de estresse:* `mvn -Dtest=ClientStressTest test`  
 - *Teste básico:* `mvn -Dtest=ClientTest test`
-- *Como executar servidores e cliente utilizando os .jar?*
+
+**Como executar servidores e cliente utilizando os .jar?**
+
 - *Server:* `java -cp target/hashTable-0.0.1-SNAPSHOT-jar-with-dependencies.jar com.server.KeyValueServer -grpc 909* -id p*`
 - *Client:* `java -cp target/hashTable-0.0.1-SNAPSHOT-jar-with-dependencies.jar com.client.Client 909*`
 
