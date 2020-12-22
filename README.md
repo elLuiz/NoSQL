@@ -41,8 +41,8 @@ Observação: "para que qualquer mudança realizada no cliente tenha o efeito de
 - *Compilação:* `mvn compile`
 - *Server:* `mvn exec:java -Dexec.mainClass="com.server.KeyValueServer" -Dexec.args="-grpc 909* -id p*"`
 - *UI Client:* `mvn exec:java -Dexec.mainClass="com.client.Client" -Dexec.args="909*"`
-- *Teste de estresse:* `mvn -Dtest=ClientStressTest test`  
-- *Teste básico:* `mvn -Dtest=ClientTest test`
+- *Teste de estresse:* `mvn -Dtest=ClientStressTest test -DskipTests=false`  
+- *Teste básico:* `mvn -Dtest=ClientTest test -DskipTests=false`
 
 **Como executar servidores e cliente utilizando os .jar?**
 
