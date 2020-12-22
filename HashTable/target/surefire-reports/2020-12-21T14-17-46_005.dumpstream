@@ -1,0 +1,66 @@
+# Created at 2020-12-21T14:17:46.007
+Dec 21, 2020 2:17:45 PM org.junit.jupiter.engine.discovery.MethodSelectorResolver resolve
+
+# Created at 2020-12-21T14:17:46.007
+WARNING: Possible configuration error: method [public void com.test.Client.ClientTest.delKeyVersion()] resulted in multiple TestDescriptors [org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor, org.junit.jupiter.engine.descriptor.TestTemplateTestDescriptor]. This is typically the result of annotating a method with multiple competing annotations such as @Test, @RepeatedTest, @ParameterizedTest, @TestFactory, etc.
+
+# Created at 2020-12-21T14:17:46.010
+Dec 21, 2020 2:17:46 PM org.junit.jupiter.engine.discovery.MethodSelectorResolver resolve
+
+# Created at 2020-12-21T14:17:46.010
+WARNING: Possible configuration error: method [public void com.test.Client.ClientTest.del()] resulted in multiple TestDescriptors [org.junit.jupiter.engine.descriptor.TestTemplateTestDescriptor, org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor]. This is typically the result of annotating a method with multiple competing annotations such as @Test, @RepeatedTest, @ParameterizedTest, @TestFactory, etc.
+
+# Created at 2020-12-21T14:17:46.016
+Dec 21, 2020 2:17:46 PM org.junit.jupiter.engine.discovery.MethodSelectorResolver resolve
+
+# Created at 2020-12-21T14:17:46.017
+WARNING: Possible configuration error: method [public void com.test.Client.ClientTest.get()] resulted in multiple TestDescriptors [org.junit.jupiter.engine.descriptor.TestTemplateTestDescriptor, org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor]. This is typically the result of annotating a method with multiple competing annotations such as @Test, @RepeatedTest, @ParameterizedTest, @TestFactory, etc.
+
+# Created at 2020-12-21T14:17:46.022
+Dec 21, 2020 2:17:46 PM org.junit.jupiter.engine.discovery.MethodSelectorResolver resolve
+
+# Created at 2020-12-21T14:17:46.022
+WARNING: Possible configuration error: method [public void com.test.Client.ClientTest.set()] resulted in multiple TestDescriptors [org.junit.jupiter.engine.descriptor.TestTemplateTestDescriptor, org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor]. This is typically the result of annotating a method with multiple competing annotations such as @Test, @RepeatedTest, @ParameterizedTest, @TestFactory, etc.
+
+# Created at 2020-12-21T14:17:46.039
+Dec 21, 2020 2:17:46 PM org.junit.jupiter.engine.discovery.MethodSelectorResolver resolve
+
+# Created at 2020-12-21T14:17:46.040
+WARNING: Possible configuration error: method [public void com.test.Client.ClientTest.testAndSet()] resulted in multiple TestDescriptors [org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor, org.junit.jupiter.engine.descriptor.TestTemplateTestDescriptor]. This is typically the result of annotating a method with multiple competing annotations such as @Test, @RepeatedTest, @ParameterizedTest, @TestFactory, etc.
+
+# Created at 2020-12-21T14:17:46.122
+Dec 21, 2020 2:17:46 PM org.junit.jupiter.engine.discovery.MethodSelectorResolver resolve
+
+# Created at 2020-12-21T14:17:46.123
+WARNING: Possible configuration error: method [public void com.test.Client.ClientTest.delKeyVersion()] resulted in multiple TestDescriptors [org.junit.jupiter.engine.descriptor.TestTemplateTestDescriptor, org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor]. This is typically the result of annotating a method with multiple competing annotations such as @Test, @RepeatedTest, @ParameterizedTest, @TestFactory, etc.
+
+# Created at 2020-12-21T14:17:46.136
+Dec 21, 2020 2:17:46 PM org.junit.jupiter.engine.discovery.MethodSelectorResolver resolve
+
+# Created at 2020-12-21T14:17:46.137
+WARNING: Possible configuration error: method [public void com.test.Client.ClientTest.del()] resulted in multiple TestDescriptors [org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor, org.junit.jupiter.engine.descriptor.TestTemplateTestDescriptor]. This is typically the result of annotating a method with multiple competing annotations such as @Test, @RepeatedTest, @ParameterizedTest, @TestFactory, etc.
+
+# Created at 2020-12-21T14:17:46.149
+Dec 21, 2020 2:17:46 PM org.junit.jupiter.engine.discovery.MethodSelectorResolver resolve
+
+# Created at 2020-12-21T14:17:46.150
+WARNING: Possible configuration error: method [public void com.test.Client.ClientTest.get()] resulted in multiple TestDescriptors [org.junit.jupiter.engine.descriptor.TestTemplateTestDescriptor, org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor]. This is typically the result of annotating a method with multiple competing annotations such as @Test, @RepeatedTest, @ParameterizedTest, @TestFactory, etc.
+
+# Created at 2020-12-21T14:17:46.153
+Dec 21, 2020 2:17:46 PM org.junit.jupiter.engine.discovery.MethodSelectorResolver resolve
+
+# Created at 2020-12-21T14:17:46.154
+WARNING: Possible configuration error: method [public void com.test.Client.ClientTest.set()] resulted in multiple TestDescriptors [org.junit.jupiter.engine.descriptor.TestTemplateTestDescriptor, org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor]. This is typically the result of annotating a method with multiple competing annotations such as @Test, @RepeatedTest, @ParameterizedTest, @TestFactory, etc.
+
+# Created at 2020-12-21T14:17:46.164
+Dec 21, 2020 2:17:46 PM org.junit.jupiter.engine.discovery.MethodSelectorResolver resolve
+
+# Created at 2020-12-21T14:17:46.168
+WARNING: Possible configuration error: method [public void com.test.Client.ClientTest.testAndSet()] resulted in multiple TestDescriptors [org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor, org.junit.jupiter.engine.descriptor.TestTemplateTestDescriptor]. This is typically the result of annotating a method with multiple competing annotations such as @Test, @RepeatedTest, @ParameterizedTest, @TestFactory, etc.
+
+# Created at 2020-12-21T14:17:46.766
+Dec 21, 2020 2:17:46 PM com.client.ClientConnection connectToServer
+
+# Created at 2020-12-21T14:17:46.766
+INFO: Connected to port: 9091
+
