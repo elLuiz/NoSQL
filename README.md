@@ -37,6 +37,11 @@ Observação: "para que qualquer mudança realizada no cliente tenha o efeito de
 - *Como executar os testes utilizando IDE:*
     - *teste de estresse com 1000 dados para testar cada função:* com o servidor executando (é preciso que ele esteja rodando) execute os testes no arquivo `src/test/java/com/test/Client/ClientStressTest.java` utilizando o JUnit.
     - *teste básico com 10 dados para testar cada função:* com o servidor executando (é preciso que ele esteja rodando) execute os testes no arquivo `src/test/java/com/test/Client/ClientTest.java` utilizando o JUnit.
+ 
+## Criação dos .jar
+- *Compilação:* `mvn compile`
+- Para gerar o .jar com todas dependências inclusas, digite na linha de comando: `mvn package -DskipTests=true` 
+    
 ## Terminal
 - *Compilação:* `mvn compile`
 - *Server:* `mvn exec:java -Dexec.mainClass="com.server.KeyValueServer" -Dexec.args="-grpc 909* -id p*"`
