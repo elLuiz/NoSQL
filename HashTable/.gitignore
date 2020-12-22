@@ -1,4 +1,5 @@
 .idea/
+/target/
 .settings
 .project
 HashTable.iml
